@@ -21,7 +21,7 @@ export const defaultSession: SessionData = {
 };
 
 export const sessionOptions: SessionOptions = {
-	password: env.IRON_SESSION_PASSWORD,
+	password: env.IRON_SESSION_SECRET,
 	cookieName: "session-cookie",
 	cookieOptions: {
 		//  allow 1 minute buffer
