@@ -13,7 +13,7 @@ export const CVStatusEnum = {
 	1: "Draft",
 	2: "Needs Review",
 	3: "Completed",
-};
+} as const;
 
 export type CVStatusKey = keyof typeof CVStatusEnum;
 export type CVStatusValue = (typeof CVStatusEnum)[CVStatusKey];
@@ -23,3 +23,7 @@ export const getCVStatusValue = (
 ): CVStatusValue | undefined => {
 	return CVStatusEnum[cvStatusKey];
 };
+
+export const CVStatusArray = Object.entries(CVStatusEnum).map(
+	([key, value]) => ({ key, value }),
+);
