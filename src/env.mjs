@@ -8,9 +8,11 @@ export const env = createEnv({
 	 */
 	server: {
 		DATABASE_URL: z.string().url(),
-		OPEN_AI_API_KEY: z.string().min(1),
 		IRON_SESSION_SECRET: z.string().min(32),
 		SESSION_EXPIRATION_TIME: z.string().min(1).default("1d"),
+
+		OPEN_AI_API_KEY: z.string().min(1),
+		GEMINI_API_KEY: z.string().min(1),
 
 		AWS_S3_ACCESS_KEY: z.string().min(1),
 		AWS_S3_SECRET_ACCESS_KEY: z.string().min(1),
@@ -33,9 +35,11 @@ export const env = createEnv({
 	 */
 	runtimeEnv: {
 		DATABASE_URL: process.env.DATABASE_URL,
-		OPEN_AI_API_KEY: process.env.OPEN_AI_API_KEY,
 		IRON_SESSION_SECRET: process.env.IRON_SESSION_SECRET,
 		SESSION_EXPIRATION_TIME: process.env.SESSION_EXPIRATION_TIME,
+
+		OPEN_AI_API_KEY: process.env.OPEN_AI_API_KEY,
+		GEMINI_API_KEY: process.env.GEMINI_API_KEY,
 
 		AWS_S3_ACCESS_KEY: process.env.AWS_S3_ACCESS_KEY,
 		AWS_S3_SECRET_ACCESS_KEY: process.env.AWS_S3_SECRET_ACCESS_KEY,
