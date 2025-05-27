@@ -1,4 +1,4 @@
-import "@/shared/styles/globals.css";
+import "../shared/styles/global.css";
 import type { Metadata } from "next";
 import Provider from "../shared/components/providers";
 import { fontVariables } from "../shared/lib/fonts";
@@ -14,7 +14,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<body className={`${fontVariables} antialiased`}>
 				<Provider>{children}</Provider>
 			</body>
