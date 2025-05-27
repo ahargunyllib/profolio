@@ -12,7 +12,9 @@ export const cvsTable = pgTable("cvs", {
 	id: uuid("id").primaryKey(),
 	userId: uuid("user_id")
 		.notNull()
-		.references(() => usersTable.id),
+		.references(() => usersTable.id, {
+			onDelete: "cascade",
+		}),
 	jobName: varchar("job_name").notNull(),
 	atsScore: integer("ats_score").notNull().default(0),
 	status: integer().notNull().default(1), // 1: draft, 2: needs review, 3: completed
