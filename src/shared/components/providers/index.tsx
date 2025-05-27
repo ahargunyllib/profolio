@@ -8,12 +8,7 @@ import { ThemeProvider } from "./theme-provider";
 
 export default function Provider({ children }: React.PropsWithChildren) {
 	return (
-		<ThemeProvider
-			attribute="class"
-			defaultTheme="light"
-			enableSystem
-			forcedTheme="light"
-		>
+		<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
 			<ReactQueryProvider>
 				{children}
 				<Toaster />
