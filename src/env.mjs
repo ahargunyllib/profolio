@@ -9,6 +9,7 @@ export const env = createEnv({
 	server: {
 		DATABASE_URL: z.string().url(),
 		IRON_SESSION_SECRET: z.string().min(32),
+		SESSION_SECRET: z.string().min(1),
 		SESSION_EXPIRATION_TIME: z.string().min(1).default("1d"),
 
 		OPEN_AI_API_KEY: z.string().min(1),
@@ -36,6 +37,7 @@ export const env = createEnv({
 	runtimeEnv: {
 		DATABASE_URL: process.env.DATABASE_URL,
 		IRON_SESSION_SECRET: process.env.IRON_SESSION_SECRET,
+		SESSION_SECRET: process.env.SESSION_SECRET,
 		SESSION_EXPIRATION_TIME: process.env.SESSION_EXPIRATION_TIME,
 
 		OPEN_AI_API_KEY: process.env.OPEN_AI_API_KEY,
