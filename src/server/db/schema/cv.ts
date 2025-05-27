@@ -2,6 +2,7 @@ import {
 	integer,
 	json,
 	pgTable,
+	text,
 	timestamp,
 	uuid,
 	varchar,
@@ -16,6 +17,7 @@ export const cvsTable = pgTable("cvs", {
 			onDelete: "cascade",
 		}),
 	jobName: varchar("job_name").notNull(),
+	description: text().notNull(),
 	atsScore: integer("ats_score").notNull().default(0),
 	status: integer().notNull().default(1), // 1: draft, 2: needs review, 3: completed
 	suggestions: json().notNull(),
