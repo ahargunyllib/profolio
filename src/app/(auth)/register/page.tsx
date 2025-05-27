@@ -13,8 +13,8 @@ export default function Page() {
 	const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 	return (
 		<section className="p-20 h-screen flex flex-row gap-36">
-			<div className="w-full flex flex-col gap-[24px]">
-				<div className="flex flex-row gap-[20px] items-center ">
+			<div className="w-full flex flex-col gap-6">
+				<div className="flex flex-row gap-5 items-center ">
 					<Image
 						src="/profolio-logo.png"
 						alt="profolio"
@@ -31,22 +31,22 @@ export default function Page() {
 					</p>
 				</div>
 
-				<div className="w-full flex flex-col gap-[12px]">
+				<div className="w-full flex flex-col gap-3">
 					<Label>Email</Label>
 					<Input type="email" placeholder="Enter your email address" />
 				</div>
 
-				<div className="w-full flex flex-col gap-[12px]">
+				<div className="w-full flex flex-col gap-3">
 					<Label>First Name</Label>
 					<Input placeholder="Enter your first name" />
 				</div>
 
-				<div className="w-full flex flex-col gap-[12px]">
+				<div className="w-full flex flex-col gap-3">
 					<Label>Last Name</Label>
 					<Input placeholder="Enter your last name" />
 				</div>
 
-				<div className="w-full flex flex-col gap-[12px]">
+				<div className="w-full flex flex-col gap-3">
 					<Label>Password</Label>
 					<div className="relative">
 						<Input
@@ -71,10 +71,10 @@ export default function Page() {
 					</div>
 				</div>
 
-				<div className="w-full flex flex-col gap-[8px]">
+				<div className="w-full flex flex-col gap-2">
 					<Button className="cursor-pointer w-full">Sign Up</Button>
 					<p className="text-center text-md  ">
-						Already have an account ?{" "}
+						Already have an account?{" "}
 						<Link href="/login" className="cursor-pointer text-primary font">
 							Sign in
 						</Link>
