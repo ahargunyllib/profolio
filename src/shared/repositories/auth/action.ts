@@ -2,12 +2,12 @@
 
 import { db } from "@/server/db";
 import { usersTable } from "@/server/db/schema/users";
-import { compare } from "bcrypt-ts";
+import { compare, hash } from "bcrypt-ts";
 import { eq } from "drizzle-orm";
 import { encodeToken } from "../../lib/decode";
 import type { ApiResponse } from "../../types";
 import { destroySession } from "../session-manager/action";
-import type { TLoginRequest, TLoginResponse } from "./dto";
+import type { TLoginRequest, TLoginResponse, TRegisterRequest } from "./dto";
 
 export async function login(
 	payload: TLoginRequest,
@@ -52,4 +52,36 @@ export async function login(
 
 export async function logout() {
 	await destroySession();
+}
+
+export async function register(
+	payload: TRegisterRequest,
+): Promise<ApiResponse<null>> {
+	const [user] = await db
+		.select()
+		.from(usersTable)
+		.where(eq(usersTable.email, payload.email))
+		.execute();
+	if (user) {
+		return {
+			success: false,
+			error: "Email Conflict",
+			message: "Email already used",
+		};
+	}
+
+	payload.password = await hash(payload.password, 10);
+
+	await db.insert(usersTable).values({
+		email: payload.email,
+		firstName: payload.firstName,
+		lastName: payload.lastName,
+		password: payload.password,
+	});
+
+	return {
+		success: true,
+		data: null,
+		message: "Register successful",
+	};
 }

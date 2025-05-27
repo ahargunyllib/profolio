@@ -10,3 +10,12 @@ export type TLoginRequest = z.infer<typeof LoginSchema>;
 export type TLoginResponse = {
 	access_token: string;
 };
+
+export const RegisterSchema = z.object({
+	email: z.string().email(),
+	firstName: z.string().min(1),
+	lastName: z.string().min(1),
+	password: z.string().min(8),
+});
+
+export type TRegisterRequest = z.infer<typeof RegisterSchema>;

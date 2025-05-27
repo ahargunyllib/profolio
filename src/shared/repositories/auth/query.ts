@@ -5,8 +5,8 @@ import { getCookie, setCookie } from "cookies-next/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createSession } from "../session-manager/action";
-import { login, logout } from "./action";
-import type { TLoginRequest } from "./dto";
+import { login, logout, register } from "./action";
+import type { TLoginRequest, TRegisterRequest } from "./dto";
 
 export const useLoginMutation = () => {
 	const queryClient = useQueryClient();
@@ -40,6 +40,18 @@ export const useLogoutMutation = () => {
 		mutationFn: () => logout(),
 		onSuccess: () => {
 			queryClient.resetQueries({ queryKey: ["auth"] });
+		},
+	});
+};
+
+export const useRegisterMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationKey: ["auth"],
+		mutationFn: (data: TRegisterRequest) => register(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["auth"] });
 		},
 	});
 };
