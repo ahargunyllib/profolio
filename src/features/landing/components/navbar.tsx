@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/shared/components/ui/button";
+import { MenuIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -63,19 +64,7 @@ export default function Navbar() {
 						aria-expanded={open}
 						aria-label={open ? "Close menu" : "Open menu"}
 					>
-						<svg
-							className="pointer-events-none"
-							width={24}
-							height={24}
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<title>anjay</title>
+						<MenuIcon>
 							<path
 								d="M4 12L20 12"
 								className="origin-center -translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[315deg]"
@@ -88,7 +77,7 @@ export default function Navbar() {
 								d="M4 12H20"
 								className="origin-center translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]"
 							/>
-						</svg>
+						</MenuIcon>
 					</Button>
 				</div>
 			</nav>

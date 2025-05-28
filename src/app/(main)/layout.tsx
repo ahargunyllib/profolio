@@ -1,5 +1,6 @@
+import Navbar from "@/features/landing/components/Navbar";
+import Footer from "@/features/landing/components/footer";
 import type React from "react";
-import Navbar from "./Navbar";
 
 export default function MainLayout({
 	children,
@@ -7,9 +8,10 @@ export default function MainLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className=" ">
+		<section className="overflow-x-hidden">
 			<Navbar />
 			{children}
+			<Footer />
 		</section>
 	);
 }
