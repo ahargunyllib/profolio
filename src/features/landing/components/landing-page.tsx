@@ -2,17 +2,18 @@ import { Button } from "@/shared/components/ui/button";
 import { ArrowRight, ChartLine } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import PreviewLandingPage from "./preview-landing-page";
 
 export default function LandingPage() {
 	return (
 		<section
 			id="#"
-			className="relative p-8 pb-4 pt-34 lg:pt-34  lg:p-24  gap-15 flex  w-full  "
+			className="relative p-8 pb-4 pt-34 lg:pt-34  lg:p-24  gap-50 flex  w-full  "
 		>
-			<div className="absolute hidden md:block lg:-top-50 lg:right-0 right-0 -top-30   -z-10">
+			<div className="absolute -top-60 -right-110  -z-10">
 				<Image src="/bg-shadow.png" alt="shadow" width={700} height={700} />
 			</div>
-			<div className="absolute -bottom-60 -left-90  -z-10">
+			<div className="absolute -bottom-60 -left-110  -z-10">
 				<Image src="/bg-shadow.png" alt="shadow" width={700} height={700} />
 			</div>
 
@@ -64,14 +65,8 @@ export default function LandingPage() {
 					</p>
 				</div>
 			</div>
-			<div className="hidden md:flex w-full  items-center justify-end relative ">
-				<Image
-					src="/landing-page-images.png"
-					alt="landingpage"
-					width={400}
-					height={1}
-					className="hover:scale-105 transition-all duration-200 ease-in-out"
-				/>
+			<div className="hidden md:flex w-full  items-center justify-end  ">
+				<PreviewLandingPage />
 			</div>
 		</section>
 	);

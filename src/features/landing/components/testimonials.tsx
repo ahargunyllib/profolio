@@ -1,47 +1,8 @@
 import { Quote, Star } from "lucide-react";
 import Image from "next/image";
+import { datas } from "../data/testimonials";
 
 export default function Testimonials() {
-	const datas = [
-		{
-			id: 1,
-			profilePicture: (
-				<Image src="/man.jpg" alt="man" className="rounded-full" fill />
-			),
-			name: "Robert Howards",
-			rating: 5,
-			job: "Marketing Manager",
-			company: "Gojek",
-			hightlight: "5 Interviews in 2 weeks",
-			review:
-				'"Profolio completely transformed my job search! After optimizing my CV with their ATS tools, I went from getting zero responses to landing 5 interviews in just 2 weeks. The keyword optimization feature is a game-changer!"',
-		},
-		{
-			id: 2,
-			profilePicture: (
-				<Image src="/falcon.jpg" alt="falcon" className="rounded-full" fill />
-			),
-			name: "Michael Chen",
-			rating: 5,
-			job: "Software Engineer",
-			company: "StartupXYZ",
-			hightlight: "Landed dream job",
-			review: `"I was struggling to get past the initial screening for months. Profolio's ATS checker showed me exactly what was wrong with my CV format. Now I’m working at my dream company!"`,
-		},
-		{
-			id: 3,
-			profilePicture: (
-				<Image src="/woman.jpg" alt="woman" className="rounded-full" fill />
-			),
-			name: "Emily Rodriguez",
-			rating: 3,
-			job: "Project Manager",
-			company: "Global Solutions Ltd",
-			hightlight: "300% more callbacks",
-			review: `"The real-time ATS scoring helped me understand why my applications weren’t getting through. After using Profolio, my interview callback rate increased by 300%. Highly recommended!"`,
-		},
-	];
-
 	return (
 		<section
 			id="testimonials"
@@ -79,7 +40,12 @@ export default function Testimonials() {
 								className="relative w-18 h-18 bg-gray-400
               rounded-full flex items-center justify-center"
 							>
-								{data.profilePicture}
+								<Image
+									src={data.profilePicture}
+									alt={data.name}
+									className="rounded-full"
+									fill
+								/>
 							</div>
 							<div className="flex flex-col gap-2">
 								<div className="flex flex-row gap-3">

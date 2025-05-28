@@ -1,8 +1,7 @@
-import Features from "./Features";
-import Footer from "./Footer";
-import LandingPage from "./LandingPage";
-import Testimonials from "./Testimonials";
-import HowItWorks from "./how-it-works";
+import Features from "@/features/landing/components/Features";
+import HowItWorks from "@/features/landing/components/how-it-works";
+import LandingPage from "@/features/landing/components/landing-page";
+import Testimonials from "@/features/landing/components/testimonials";
 
 export default function Home() {
 	return (
@@ -11,7 +10,6 @@ export default function Home() {
 			<Features />
 			<HowItWorks />
 			<Testimonials />
-			<Footer />
 		</>
 	);
 }
