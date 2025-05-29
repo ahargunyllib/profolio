@@ -70,7 +70,7 @@ export default function Testimonials() {
 								</div>
 
 								<p className=" px-2 rounded-full bg-green-700/12 text-green-700 text-xs font-semibold w-fit">
-									{data.hightlight}
+									{data.highlight}
 								</p>
 							</div>
 						</div>
