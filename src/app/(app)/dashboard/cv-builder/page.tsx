@@ -1,20 +1,10 @@
 import CVEditorContainer from "@/features/cv-builder/containers/cv-editor-container";
-import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@/shared/components/ui/avatar";
-import { Button } from "@/shared/components/ui/button";
-import { Separator } from "@/shared/components/ui/separator";
-import { getMySession } from "@/shared/repositories/auth/action";
-import { ArrowLeftIcon } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import HeaderContainer from "@/features/cv-builder/containers/header-container";
 
 export default function Page() {
 	return (
 		<section className="min-h-dvh flex flex-col">
-			<Header />
+			<HeaderContainer />
 			<div className="bg-muted p-4 md:p-16 space-y-8 flex-1">
 				<div className="space-y-2 text-center w-1/2 mx-auto">
 					<h1 className="font-bold text-5xl">Design your resume</h1>
@@ -26,47 +16,5 @@ export default function Page() {
 				<CVEditorContainer />
 			</div>
 		</section>
-	);
-}
-
-async function Header() {
-	const session = await getMySession();
-
-	if (!session.success) {
-		notFound();
-	}
-
-	const user = session.data;
-
-	return (
-		<header className="py-4 px-8 md:py-8 md:px-16 border-b flex flex-row items-center justify-between">
-			<div className="flex flex-row items-center h-12 gap-4 text-muted-foreground">
-				<Button
-					variant="ghost"
-					className="flex flex-row gap-2 items-center"
-					asChild
-				>
-					<Link href="/dashboard/home">
-						<ArrowLeftIcon />
-						<span className="text-base">Back to Dashboard</span>
-					</Link>
-				</Button>
-				<Separator orientation="vertical" />
-				<div className="flex flex-row gap-2 items-center">
-					<div className="bg-primary size-12 rounded-lg" />
-					<span className="text-2xl font-semibold">Profolio CV Builder</span>
-				</div>
-			</div>
-			<Avatar>
-				<AvatarImage
-					src={user.profilePictureURL || undefined}
-					alt="Profile Picture"
-				/>
-				<AvatarFallback>
-					{user.firstName[0]}
-					{user.lastName[0]}
-				</AvatarFallback>
-			</Avatar>
-		</header>
 	);
 }

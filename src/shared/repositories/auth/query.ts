@@ -1,11 +1,11 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCookie, setCookie } from "cookies-next/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createSession } from "../session-manager/action";
-import { login, logout, register } from "./action";
+import { getMySession, login, logout, register } from "./action";
 import type { TLoginRequest, TRegisterRequest } from "./dto";
 
 export const useLoginMutation = () => {
@@ -53,5 +53,12 @@ export const useRegisterMutation = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["auth"] });
 		},
+	});
+};
+
+export const useGetMySessionQuery = () => {
+	return useQuery({
+		queryKey: ["auth"],
+		queryFn: getMySession,
 	});
 };
