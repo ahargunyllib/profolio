@@ -5,6 +5,7 @@ import { usersTable } from "@/server/db/schema/users";
 import { compare, hash } from "bcrypt-ts";
 import { eq } from "drizzle-orm";
 import { encodeToken } from "../../lib/decode";
+import { tryCatch } from "../../lib/try-catch";
 import type { ApiResponse } from "../../types";
 import { destroySession } from "../session-manager/action";
 import type { TLoginRequest, TLoginResponse, TRegisterRequest } from "./dto";
@@ -12,11 +13,22 @@ import type { TLoginRequest, TLoginResponse, TRegisterRequest } from "./dto";
 export async function login(
 	payload: TLoginRequest,
 ): Promise<ApiResponse<TLoginResponse>> {
-	const [user] = await db
-		.select()
-		.from(usersTable)
-		.where(eq(usersTable.email, payload.email))
-		.execute();
+	const { data: users, error: errorSelect } = await tryCatch(
+		db
+			.select()
+			.from(usersTable)
+			.where(eq(usersTable.email, payload.email))
+			.execute(),
+	);
+	if (errorSelect) {
+		return {
+			success: false,
+			error: "Database Error",
+			message: "An error occurred while accessing the database",
+		};
+	}
+
+	const [user] = users;
 	if (!user) {
 		return {
 			success: false,
@@ -25,7 +37,17 @@ export async function login(
 		};
 	}
 
-	const isPasswordValid = await compare(payload.password, user.password);
+	const { data: isPasswordValid, error: errorCompare } = await tryCatch(
+		compare(payload.password, user.password),
+	);
+	if (errorCompare) {
+		return {
+			success: false,
+			error: "Comparison Error",
+			message: "An error occurred while comparing passwords",
+		};
+	}
+
 	if (!isPasswordValid) {
 		return {
 			success: false,
@@ -39,7 +61,14 @@ export async function login(
 		role: user.role,
 	};
 
-	const access_token = await encodeToken(session);
+	const { data: access_token, error } = await tryCatch(encodeToken(session));
+	if (error) {
+		return {
+			success: false,
+			error: "Token Generation Error",
+			message: "An error occurred while generating the access token",
+		};
+	}
 
 	return {
 		success: true,
@@ -57,11 +86,22 @@ export async function logout() {
 export async function register(
 	payload: TRegisterRequest,
 ): Promise<ApiResponse<null>> {
-	const [user] = await db
-		.select()
-		.from(usersTable)
-		.where(eq(usersTable.email, payload.email))
-		.execute();
+	const { data: users, error: errorSelect } = await tryCatch(
+		db
+			.select()
+			.from(usersTable)
+			.where(eq(usersTable.email, payload.email))
+			.execute(),
+	);
+	if (errorSelect) {
+		return {
+			success: false,
+			error: "Database Error",
+			message: "An error occurred while accessing the database",
+		};
+	}
+
+	const [user] = users;
 	if (user) {
 		return {
 			success: false,
@@ -70,14 +110,34 @@ export async function register(
 		};
 	}
 
-	payload.password = await hash(payload.password, 10);
+	const { data: hashedPassword, error: errorHash } = await tryCatch(
+		hash(payload.password, 10),
+	);
+	if (errorHash) {
+		return {
+			success: false,
+			error: "Hashing Error",
+			message: "An error occurred while hashing the password",
+		};
+	}
 
-	await db.insert(usersTable).values({
-		email: payload.email,
-		firstName: payload.firstName,
-		lastName: payload.lastName,
-		password: payload.password,
-	});
+	payload.password = hashedPassword;
+
+	const { error } = await tryCatch(
+		db.insert(usersTable).values({
+			email: payload.email,
+			firstName: payload.firstName,
+			lastName: payload.lastName,
+			password: payload.password,
+		}),
+	);
+	if (error) {
+		return {
+			success: false,
+			error: "Database Error",
+			message: "An error occurred while inserting the user",
+		};
+	}
 
 	return {
 		success: true,
