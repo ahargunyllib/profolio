@@ -7,6 +7,7 @@ import {
 } from "@/shared/components/ui/avatar";
 import { getMySession } from "@/shared/repositories/auth/action";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 export default function Page() {
 	return (
@@ -21,7 +22,9 @@ export default function Page() {
 					</p>
 				</div>
 				<StatisticContainer />
-				<ListCVSection />
+				<Suspense>
+					<ListCVSection />
+				</Suspense>
 			</div>
 		</section>
 	);
