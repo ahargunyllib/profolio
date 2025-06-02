@@ -3,7 +3,7 @@
 import { generateObjectFromAI, models } from "@/server/ai";
 import { db } from "@/server/db";
 import { cvsTable } from "@/server/db/schema/cv";
-import { and, eq } from "drizzle-orm";
+import { and, eq, ilike, or } from "drizzle-orm";
 import z from "zod";
 import { tryCatch } from "../../lib/try-catch";
 import type { ApiResponse, CV } from "../../types";
@@ -228,7 +228,12 @@ export const generateGrade = async (
 	};
 };
 
-export const getMyCVs = async (): Promise<ApiResponse<CV[]>> => {
+export const getMyCVs = async (query: {
+	search: string | null;
+	status: number | null;
+}): Promise<ApiResponse<CV[]>> => {
+	console.log(query);
+
 	const { data: session, error: getSessionError } = await tryCatch(
 		getSession(),
 	);
@@ -249,7 +254,20 @@ export const getMyCVs = async (): Promise<ApiResponse<CV[]>> => {
 	}
 
 	const { data: cvs, error: fetchError } = await tryCatch(
-		db.select().from(cvsTable).where(eq(cvsTable.userId, session.userId)),
+		db
+			.select()
+			.from(cvsTable)
+			.where(
+				and(
+					eq(cvsTable.userId, session.userId),
+					or(
+						query.search
+							? ilike(cvsTable.jobName, `%${query.search}%`)
+							: undefined,
+						query.status ? eq(cvsTable.status, query.status) : undefined,
+					),
+				),
+			),
 	);
 	if (fetchError) {
 		return {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 import type { CV } from "../../types";
 import {
 	createCV,
@@ -34,9 +35,21 @@ export const useGenerateSummariesMutation = () => {
 };
 
 export const useGetMyCVsQuery = () => {
+	const searchParams = useSearchParams();
+	const search = searchParams.get("search");
+	const statusStr = searchParams.get("status");
+	const status = statusStr ? Number.parseInt(statusStr) : null;
+
+	const query = {
+		search,
+		status,
+	};
+
+	console.log(query, "query.ts");
+
 	return useQuery({
-		queryKey: ["cvs"],
-		queryFn: getMyCVs,
+		queryKey: ["cvs", query],
+		queryFn: () => getMyCVs(query),
 	});
 };
 
