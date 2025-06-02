@@ -159,7 +159,7 @@ export default function EducationForm() {
 											<FormLabel htmlFor={`gpa-${index}`}>GPA</FormLabel>
 											<FormControl>
 												<Input
-													id={`location-${index}`}
+													id={`gpa-${index}`}
 													placeholder="3.5"
 													inputMode="decimal"
 													{...field}
