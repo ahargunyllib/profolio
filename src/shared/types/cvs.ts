@@ -9,13 +9,11 @@ export type CV = {
 	description: string;
 	atsScore: number;
 	status: CVStatusKey;
-	suggestions: Record<
-		string,
-		{
-			score: number;
-			points: string[];
-		}[]
-	>;
+	suggestions: {
+		name: string;
+		score: number;
+		points: string[];
+	}[];
 	data: {
 		firstName: string;
 		lastName: string;
@@ -33,7 +31,9 @@ export type CV = {
 			startDate: Date;
 			endDate?: Date;
 			description?: string;
-			points: string[];
+			points: {
+				point: string;
+			}[];
 		}[];
 
 		educations: {
@@ -46,7 +46,9 @@ export type CV = {
 			endDate?: Date;
 		}[];
 
-		skills?: string[];
+		skills?: {
+			name: string;
+		}[];
 	};
 	createdAt: string;
 	updatedAt: string;
