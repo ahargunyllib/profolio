@@ -15,33 +15,36 @@ import {
 	FormMessage,
 } from "@/shared/components/ui/form";
 import { Textarea } from "@/shared/components/ui/textarea";
-import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVRequest } from "@/shared/repositories/cvs/dto";
 import { RefreshCwIcon, SparklesIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { tryCatch } from "../../../../shared/lib/try-catch";
-import { generateSummaries } from "../../../../shared/repositories/cvs/action";
+import { useGenerateSummariesMutation } from "../../../../shared/repositories/cvs/query";
 
 export default function SummaryForm() {
-	const form = useFormContext<TCreateCVSchema>();
+	const form = useFormContext<TCreateCVRequest>();
 
-	const [isGeneratingSummaries, setIsGeneratingSummaries] = useState(false);
+	// const [isGeneratingSummaries, setIsGeneratingSummaries] = useState(false);
+	const { mutate: generateSummaries, isPending: isGeneratingSummaries } =
+		useGenerateSummariesMutation();
 	const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
 
 	const generateAISummary = async () => {
-		setIsGeneratingSummaries(true);
+		setAiSuggestions([]);
 
 		const req = form.getValues();
-		const { data: suggestions, error } = await tryCatch(generateSummaries(req));
-		setIsGeneratingSummaries(false);
 
-		if (error) {
-			toast.error("Failed to generate summaries. Please try again later.");
-			return;
-		}
+		generateSummaries(req, {
+			onSuccess(res) {
+				if (!res.success) {
+					toast.error(res.message);
+					return;
+				}
 
-		setAiSuggestions(suggestions);
+				setAiSuggestions(res.data);
+			},
+		});
 	};
 
 	const useSuggestion = useCallback(

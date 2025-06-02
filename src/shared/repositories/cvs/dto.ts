@@ -3,6 +3,14 @@ import z from "zod";
 export const CreateCVSchema = z.object({
 	jobName: z.string().min(1, "Job name is required"),
 	description: z.string().min(1, "Description is required"),
+	atsScore: z.number().min(0).max(100),
+	suggestions: z.array(
+		z.object({
+			name: z.string(),
+			score: z.number().min(0).max(100),
+			points: z.array(z.string()),
+		}),
+	),
 	data: z.object({
 		firstName: z.string().min(1, "First name is required"),
 		lastName: z.string().min(1, "Last name is required"),
@@ -51,4 +59,10 @@ export const CreateCVSchema = z.object({
 	}),
 });
 
-export type TCreateCVSchema = z.infer<typeof CreateCVSchema>;
+export type TCreateCVRequest = z.infer<typeof CreateCVSchema>;
+
+export const UpdateCVSchema = CreateCVSchema.extend({
+	id: z.string().min(1, "CV ID is required"),
+});
+
+export type TUpdateCVRequest = z.infer<typeof UpdateCVSchema>;

@@ -14,11 +14,11 @@ import {
 	FormMessage,
 } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
-import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVRequest } from "@/shared/repositories/cvs/dto";
 import { useFormContext } from "react-hook-form";
 
 export default function PersonalInfoForm() {
-	const form = useFormContext<TCreateCVSchema>();
+	const form = useFormContext<TCreateCVRequest>();
 
 	return (
 		<Card>

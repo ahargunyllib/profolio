@@ -22,12 +22,12 @@ import {
 	PopoverTrigger,
 } from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib/utils";
-import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVRequest } from "@/shared/repositories/cvs/dto";
 import { CalendarIcon, PlusIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export default function EducationForm() {
-	const form = useFormContext<TCreateCVSchema>();
+	const form = useFormContext<TCreateCVRequest>();
 	const educationsArray = useFieldArray({
 		control: form.control,
 		name: "data.educations",

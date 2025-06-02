@@ -16,11 +16,11 @@ import {
 } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
 import { Textarea } from "@/shared/components/ui/textarea";
-import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVRequest } from "@/shared/repositories/cvs/dto";
 import { useFormContext } from "react-hook-form";
 
 export default function GeneralInfoForm() {
-	const form = useFormContext<TCreateCVSchema>();
+	const form = useFormContext<TCreateCVRequest>();
 	return (
 		<Card>
 			<CardHeader>

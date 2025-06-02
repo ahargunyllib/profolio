@@ -1,12 +1,22 @@
 "use server";
 
 import { generateObjectFromAI, models } from "@/server/ai";
+import { db } from "@/server/db";
+import { cvsTable } from "@/server/db/schema/cv";
+import { and, eq } from "drizzle-orm";
 import z from "zod";
-import { CreateCVSchema, type TCreateCVSchema } from "./dto";
+import { tryCatch } from "../../lib/try-catch";
+import type { ApiResponse, CV } from "../../types";
+import { getSession } from "../session-manager/action";
+import {
+	CreateCVSchema,
+	type TCreateCVRequest,
+	type TUpdateCVRequest,
+} from "./dto";
 
 export const generatePoints = async (
-	req: TCreateCVSchema["data"]["jobExperiences"][number],
-) => {
+	req: TCreateCVRequest["data"]["jobExperiences"][number],
+): Promise<ApiResponse<CV["data"]["jobExperiences"][number]["points"]>> => {
 	const prompt = `
     Generate key achievements for the following job experience:
     Job Title: ${req.jobTitle}
@@ -22,16 +32,32 @@ export const generatePoints = async (
     Language: English
   `;
 
-	const points = await generateObjectFromAI(
-		models["gemini-2.0-flash"],
-		prompt,
-		CreateCVSchema.shape.data.shape.jobExperiences.element.shape.points,
+	const { data: points, error } = await tryCatch(
+		generateObjectFromAI(
+			models["gemini-2.0-flash"],
+			prompt,
+			CreateCVSchema.shape.data.shape.jobExperiences.element.shape.points,
+		),
 	);
+	if (error) {
+		return {
+			success: false,
+			error: "AI Generation Error",
+			message:
+				"An error occurred while generating points for the job experience",
+		};
+	}
 
-	return points;
+	return {
+		success: true,
+		message: "Points generated successfully",
+		data: points,
+	};
 };
 
-export const generateSummaries = async (req: TCreateCVSchema) => {
+export const generateSummaries = async (
+	req: TCreateCVRequest,
+): Promise<ApiResponse<CV["data"]["summary"][]>> => {
 	const prompt = `
     Generate multiple concise professional summaries for a CV based on the following information:
     First Name: ${req.data.firstName}
@@ -80,16 +106,40 @@ export const generateSummaries = async (req: TCreateCVSchema) => {
     Summaries should be in English, concise, and highlight key skills and experiences.
   `;
 
-	const summaries = await generateObjectFromAI(
-		models["gemini-2.0-flash"],
-		prompt,
-		z.array(CreateCVSchema.shape.data.shape.summary),
+	const { data: summaries, error } = await tryCatch(
+		generateObjectFromAI(
+			models["gemini-2.0-flash"],
+			prompt,
+			z.array(CreateCVSchema.shape.data.shape.summary),
+		),
 	);
 
-	return summaries;
+	if (error) {
+		return {
+			success: false,
+			error: "AI Generation Error",
+			message: "An error occurred while generating summaries for the CV",
+		};
+	}
+
+	if (!Array.isArray(summaries) || summaries.length === 0) {
+		return {
+			success: false,
+			error: "Invalid Response",
+			message: "The AI did not return valid summaries",
+		};
+	}
+
+	return {
+		success: true,
+		message: "Summaries generated successfully",
+		data: summaries,
+	};
 };
 
-export const generateGrade = async (req: TCreateCVSchema) => {
+export const generateGrade = async (
+	req: TCreateCVRequest,
+): Promise<ApiResponse<Pick<CV, "atsScore" | "suggestions">>> => {
 	const prompt = `
     Analyze the following CV data and provide a grade based on its completeness and relevance for job applications:
 
@@ -146,20 +196,259 @@ export const generateGrade = async (req: TCreateCVSchema) => {
     The suggestions should be actionable and specific to the CV data provided.
   `;
 
-	const grade = await generateObjectFromAI(
-		models["gemini-2.0-flash"],
-		prompt,
-		z.object({
-			atsScore: z.number().min(0).max(100),
-			suggestions: z.array(
-				z.object({
-					name: z.string(),
-					score: z.number().min(0).max(100),
-					points: z.array(z.string()),
-				}),
-			),
-		}),
+	const { data: grade, error } = await tryCatch(
+		generateObjectFromAI(
+			models["gemini-2.0-flash"],
+			prompt,
+			z.object({
+				atsScore: z.number().min(0).max(100),
+				suggestions: z.array(
+					z.object({
+						name: z.string(),
+						score: z.number().min(0).max(100),
+						points: z.array(z.string()),
+					}),
+				),
+			}),
+		),
 	);
 
-	return grade;
+	if (error) {
+		return {
+			success: false,
+			error: "AI Generation Error",
+			message: "An error occurred while generating the CV grade",
+		};
+	}
+
+	return {
+		success: true,
+		data: grade,
+		message: "CV grade generated successfully",
+	};
+};
+
+export const getMyCVs = async (): Promise<ApiResponse<CV[]>> => {
+	const { data: session, error: getSessionError } = await tryCatch(
+		getSession(),
+	);
+	if (getSessionError) {
+		return {
+			success: false,
+			error: "Session Error",
+			message: "An error occurred while retrieving the session",
+		};
+	}
+
+	if (!session || !session.isLoggedIn) {
+		return {
+			success: false,
+			error: "Unauthorized",
+			message: "You must be logged in to view your CVs",
+		};
+	}
+
+	const { data: cvs, error: fetchError } = await tryCatch(
+		db.select().from(cvsTable).where(eq(cvsTable.userId, session.userId)),
+	);
+	if (fetchError) {
+		return {
+			success: false,
+			error: "Database Error",
+			message: "An error occurred while fetching your CVs from the database",
+		};
+	}
+
+	return {
+		success: true,
+		message: "CVs retrieved successfully",
+		data: cvs as unknown as CV[],
+	};
+};
+
+export const getMyCVById = async (id: CV["id"]): Promise<ApiResponse<CV>> => {
+	const { data: session, error: getSessionError } = await tryCatch(
+		getSession(),
+	);
+	if (getSessionError) {
+		return {
+			success: false,
+			error: "Session Error",
+			message: "An error occurred while retrieving the session",
+		};
+	}
+
+	if (!session || !session.isLoggedIn) {
+		return {
+			success: false,
+			error: "Unauthorized",
+			message: "You must be logged in to view a CV",
+		};
+	}
+
+	const { data: cvs, error: fetchError } = await tryCatch(
+		db
+			.select()
+			.from(cvsTable)
+			.where(and(eq(cvsTable.id, id), eq(cvsTable.userId, session.userId))),
+	);
+	if (fetchError) {
+		return {
+			success: false,
+			error: "Database Error",
+			message: "An error occurred while fetching the CV from the database",
+		};
+	}
+
+	const [cv] = cvs;
+	if (!cv) {
+		return {
+			success: false,
+			error: "Not Found",
+			message: "CV not found or you do not have permission to view it",
+		};
+	}
+
+	return {
+		success: true,
+		message: "CV retrieved successfully",
+		data: cv as unknown as CV,
+	};
+};
+
+export const createCV = async (
+	req: TCreateCVRequest,
+): Promise<ApiResponse<null>> => {
+	const { data: session, error: getSessionError } = await tryCatch(
+		getSession(),
+	);
+	if (getSessionError) {
+		return {
+			success: false,
+			error: "Session Error",
+			message: "An error occurred while retrieving the session",
+		};
+	}
+
+	if (!session || !session.isLoggedIn) {
+		return {
+			success: false,
+			error: "Unauthorized",
+			message: "You must be logged in to create a CV",
+		};
+	}
+	const { error: insertError } = await tryCatch(
+		db.insert(cvsTable).values({
+			userId: session.userId,
+			jobName: req.jobName,
+			description: req.description,
+			atsScore: req.atsScore,
+			status: req.atsScore >= 80 ? 3 : 2,
+			suggestions: req.suggestions,
+			data: req.data,
+		}),
+	);
+	if (insertError) {
+		return {
+			success: false,
+			error: "Database Error",
+			message: "An error occurred while inserting the CV into the database",
+		};
+	}
+
+	return {
+		success: true,
+		message: "CV created successfully",
+		data: null,
+	};
+};
+
+export const updateCV = async (
+	id: CV["id"],
+	req: TUpdateCVRequest,
+): Promise<ApiResponse<null>> => {
+	const { data: session, error: getSessionError } = await tryCatch(
+		getSession(),
+	);
+	if (getSessionError) {
+		return {
+			success: false,
+			error: "Session Error",
+			message: "An error occurred while retrieving the session",
+		};
+	}
+
+	if (!session || !session.isLoggedIn) {
+		return {
+			success: false,
+			error: "Unauthorized",
+			message: "You must be logged in to update a CV",
+		};
+	}
+
+	const { error: updateError } = await tryCatch(
+		db
+			.update(cvsTable)
+			.set({
+				jobName: req.jobName,
+				description: req.description,
+				atsScore: req.atsScore,
+				status: req.atsScore >= 80 ? 3 : 2,
+				suggestions: req.suggestions,
+				data: req.data,
+			})
+			.where(eq(cvsTable.id, id))
+			.execute(),
+	);
+	if (updateError) {
+		return {
+			success: false,
+			error: "Database Error",
+			message: "An error occurred while updating the CV in the database",
+		};
+	}
+
+	return {
+		success: true,
+		message: "CV updated successfully",
+		data: null,
+	};
+};
+
+export const deleteCV = async (id: CV["id"]): Promise<ApiResponse<null>> => {
+	const { data: session, error: getSessionError } = await tryCatch(
+		getSession(),
+	);
+	if (getSessionError) {
+		return {
+			success: false,
+			error: "Session Error",
+			message: "An error occurred while retrieving the session",
+		};
+	}
+
+	if (!session || !session.isLoggedIn) {
+		return {
+			success: false,
+			error: "Unauthorized",
+			message: "You must be logged in to delete a CV",
+		};
+	}
+
+	const { error: deleteError } = await tryCatch(
+		db.delete(cvsTable).where(eq(cvsTable.id, id)),
+	);
+	if (deleteError) {
+		return {
+			success: false,
+			error: "Database Error",
+			message: "An error occurred while deleting the CV from the database",
+		};
+	}
+
+	return {
+		success: true,
+		message: "CV deleted successfully",
+		data: null,
+	};
 };

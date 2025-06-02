@@ -10,7 +10,7 @@ import {
 import { usersTable } from "./users";
 
 export const cvsTable = pgTable("cvs", {
-	id: uuid("id").primaryKey(),
+	id: uuid("id").primaryKey().defaultRandom(),
 	userId: uuid("user_id")
 		.notNull()
 		.references(() => usersTable.id, {
