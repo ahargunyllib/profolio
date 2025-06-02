@@ -13,14 +13,14 @@ import { Input } from "@/shared/components/ui/input";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { useLoginForm } from "../hooks/use-login-form";
+import { useRegisterForm } from "../hooks/use-register-form";
 
-export function LoginForm() {
+export function RegisterForm() {
 	const [isVisible, setIsVisible] = useState<boolean>(false);
 
 	const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
-	const form = useLoginForm();
+	const form = useRegisterForm();
 
 	return (
 		<Form {...form}>
@@ -48,6 +48,46 @@ export function LoginForm() {
 
 				<FormField
 					control={form.control}
+					name="firstName"
+					render={({ field }) => {
+						return (
+							<FormItem className="w-full flex flex-col gap-3">
+								<FormLabel htmlFor="firstName">First Name</FormLabel>
+								<FormControl>
+									<Input
+										id="firstName"
+										placeholder="Enter your first name"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
+				/>
+
+				<FormField
+					control={form.control}
+					name="lastName"
+					render={({ field }) => {
+						return (
+							<FormItem className="w-full flex flex-col gap-3">
+								<FormLabel htmlFor="lastName">Last Name</FormLabel>
+								<FormControl>
+									<Input
+										id="lastName"
+										placeholder="Enter your last name"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
+				/>
+
+				<FormField
+					control={form.control}
 					name="password"
 					render={({ field }) => {
 						return (
@@ -64,18 +104,11 @@ export function LoginForm() {
 										/>
 									</FormControl>
 									<button
-										className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
 										type="button"
 										onClick={toggleVisibility}
-										aria-label={isVisible ? "Hide password" : "Show password"}
-										aria-pressed={isVisible}
-										aria-controls="password"
+										className="absolute top-1/2 right-2 -translate-y-1/2 text-muted-foreground"
 									>
-										{isVisible ? (
-											<EyeOffIcon size={16} aria-hidden="true" />
-										) : (
-											<EyeIcon size={16} aria-hidden="true" />
-										)}
+										{isVisible ? <EyeOffIcon /> : <EyeIcon />}
 									</button>
 								</div>
 								<FormMessage />
@@ -86,16 +119,16 @@ export function LoginForm() {
 
 				<div className="w-full flex flex-col gap-2">
 					<Button
-						type="submit"
 						className="cursor-pointer w-full"
+						type="submit"
 						disabled={form.isLoading}
 					>
-						Sign In
+						Sign Up
 					</Button>
-					<p className="text-center text-md ">
-						Don&apos;t have an account?{" "}
-						<Link href="/register" className="cursor-pointer text-primary font">
-							Sign up
+					<p className="text-center text-md  ">
+						Already have an account?{" "}
+						<Link href="/login" className="cursor-pointer text-primary font">
+							Sign in
 						</Link>
 					</p>
 				</div>
