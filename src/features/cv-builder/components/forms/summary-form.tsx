@@ -15,7 +15,7 @@ import {
 	FormMessage,
 } from "@/shared/components/ui/form";
 import { Textarea } from "@/shared/components/ui/textarea";
-import type { CVData } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
 import { RefreshCwIcon, SparklesIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -24,7 +24,7 @@ import { tryCatch } from "../../../../shared/lib/try-catch";
 import { generateSummaries } from "../../../../shared/repositories/cvs/action";
 
 export default function SummaryForm() {
-	const form = useFormContext<CVData>();
+	const form = useFormContext<TCreateCVSchema>();
 
 	const [isGeneratingSummaries, setIsGeneratingSummaries] = useState(false);
 	const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);

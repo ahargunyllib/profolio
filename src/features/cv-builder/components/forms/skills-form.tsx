@@ -14,12 +14,12 @@ import {
 	FormMessage,
 } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
-import type { CVData } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export default function SkillsForm() {
-	const form = useFormContext<CVData>();
+	const form = useFormContext<TCreateCVSchema>();
 	const skillsArray = useFieldArray({
 		control: form.control,
 		name: "data.skills",

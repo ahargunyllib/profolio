@@ -8,13 +8,13 @@ import {
 	CardTitle,
 } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
-import type { CVData } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
 import { Download, RefreshCw } from "lucide-react";
 import { useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 export default function CVEditorPreview() {
-	const form = useFormContext<CVData>();
+	const form = useFormContext<TCreateCVSchema>();
 	const [
 		firstName,
 		lastName,

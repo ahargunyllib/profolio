@@ -1,6 +1,9 @@
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
-import { type CVData, schema } from "@/shared/repositories/cvs/dto";
+import {
+	CreateCVSchema,
+	type TCreateCVSchema,
+} from "@/shared/repositories/cvs/dto";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
@@ -13,8 +16,8 @@ export default function CVEditorContainer() {
 	const [currentStep, setCurrentStep] = useState(1);
 	const Comp = steps[currentStep - 1].component;
 
-	const form = useForm<CVData>({
-		resolver: zodResolver(schema),
+	const form = useForm<TCreateCVSchema>({
+		resolver: zodResolver(CreateCVSchema),
 		defaultValues: {
 			jobName: "",
 			description: "",

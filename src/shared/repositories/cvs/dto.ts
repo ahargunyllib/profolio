@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const schema = z.object({
+export const CreateCVSchema = z.object({
 	jobName: z.string().min(1, "Job name is required"),
 	description: z.string().min(1, "Description is required"),
 	data: z.object({
@@ -51,4 +51,4 @@ export const schema = z.object({
 	}),
 });
 
-export type CVData = z.infer<typeof schema>;
+export type TCreateCVSchema = z.infer<typeof CreateCVSchema>;

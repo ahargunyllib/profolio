@@ -1,3 +1,4 @@
+import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
@@ -7,20 +8,19 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/shared/components/ui/card";
+import { Progress } from "@/shared/components/ui/progress";
 import { tryCatch } from "@/shared/lib/try-catch";
 import { cn } from "@/shared/lib/utils";
 import { generateGrade } from "@/shared/repositories/cvs/action";
-import type { CVData } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
 import type { CV } from "@/shared/types";
 import { ChartColumnIncreasingIcon, RefreshCwIcon } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { Badge } from "../../../shared/components/ui/badge";
-import { Progress } from "../../../shared/components/ui/progress";
 
 export default function CVGrade() {
-	const form = useFormContext<CVData>();
+	const form = useFormContext<TCreateCVSchema>();
 	const [isGeneratingGrade, setIsGeneratingGrade] = useState(false);
 	const [grade, setGrade] = useState<{
 		atsScore: CV["atsScore"];

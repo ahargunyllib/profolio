@@ -26,7 +26,7 @@ import { Textarea } from "@/shared/components/ui/textarea";
 import { tryCatch } from "@/shared/lib/try-catch";
 import { cn } from "@/shared/lib/utils";
 import { generatePoints } from "@/shared/repositories/cvs/action";
-import type { CVData } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
 import {
 	CalendarIcon,
 	PlusIcon,
@@ -39,7 +39,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function WorkExperienceForm() {
-	const form = useFormContext<CVData>();
+	const form = useFormContext<TCreateCVSchema>();
 	const workExperienceArray = useFieldArray({
 		control: form.control,
 		name: "data.jobExperiences",
@@ -299,7 +299,7 @@ function WorkExperiencePointsForm({
 	index: number;
 	onGeneratePoints: (index: number) => void;
 	isGeneratingPoints: boolean;
-	form: ReturnType<typeof useFormContext<CVData>>;
+	form: ReturnType<typeof useFormContext<TCreateCVSchema>>;
 }) {
 	const pointsArray = useFieldArray({
 		control: form.control,

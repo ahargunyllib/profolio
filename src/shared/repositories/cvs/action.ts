@@ -2,10 +2,10 @@
 
 import { generateObjectFromAI, models } from "@/server/ai";
 import z from "zod";
-import { type CVData, schema } from "./dto";
+import { CreateCVSchema, type TCreateCVSchema } from "./dto";
 
 export const generatePoints = async (
-	req: CVData["data"]["jobExperiences"][number],
+	req: TCreateCVSchema["data"]["jobExperiences"][number],
 ) => {
 	const prompt = `
     Generate key achievements for the following job experience:
@@ -25,13 +25,13 @@ export const generatePoints = async (
 	const points = await generateObjectFromAI(
 		models["gemini-2.0-flash"],
 		prompt,
-		schema.shape.data.shape.jobExperiences.element.shape.points,
+		CreateCVSchema.shape.data.shape.jobExperiences.element.shape.points,
 	);
 
 	return points;
 };
 
-export const generateSummaries = async (req: CVData) => {
+export const generateSummaries = async (req: TCreateCVSchema) => {
 	const prompt = `
     Generate multiple concise professional summaries for a CV based on the following information:
     First Name: ${req.data.firstName}
@@ -83,13 +83,13 @@ export const generateSummaries = async (req: CVData) => {
 	const summaries = await generateObjectFromAI(
 		models["gemini-2.0-flash"],
 		prompt,
-		z.array(schema.shape.data.shape.summary),
+		z.array(CreateCVSchema.shape.data.shape.summary),
 	);
 
 	return summaries;
 };
 
-export const generateGrade = async (req: CVData) => {
+export const generateGrade = async (req: TCreateCVSchema) => {
 	const prompt = `
     Analyze the following CV data and provide a grade based on its completeness and relevance for job applications:
 
