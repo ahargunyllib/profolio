@@ -1,5 +1,5 @@
-import Navbar from "@/features/landing/components/Navbar";
 import Footer from "@/features/landing/components/footer";
+import Navbar from "@/features/landing/components/navbar";
 import type React from "react";
 
 export default function MainLayout({
