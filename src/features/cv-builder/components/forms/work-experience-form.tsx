@@ -195,7 +195,14 @@ export default function WorkExperienceForm() {
 													<Calendar
 														mode="single"
 														selected={field.value}
-														onSelect={field.onChange}
+														onSelect={(e) => {
+															if (!e) {
+																field.onChange(new Date());
+																return;
+															}
+
+															field.onChange(e);
+														}}
 														disabled={(date) =>
 															date > new Date() || date < new Date("1900-01-01")
 														}

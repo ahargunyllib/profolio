@@ -33,14 +33,14 @@ export const useGenerateSummariesMutation = () => {
 	});
 };
 
-export const useMyCVsQuery = () => {
+export const useGetMyCVsQuery = () => {
 	return useQuery({
 		queryKey: ["cvs"],
 		queryFn: getMyCVs,
 	});
 };
 
-export const useMyCVByIdQuery = (id: CV["id"]) => {
+export const useGetMyCVByIdQuery = (id: CV["id"]) => {
 	return useQuery({
 		queryKey: ["cvs", id],
 		queryFn: () => getMyCVById(id),
