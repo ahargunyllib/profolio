@@ -1,6 +1,6 @@
 "use client";
 
-import CVEditorContainer from "@/features/cv-builder/container/cv-editor-container";
+import CVEditorContainer from "@/features/cv-builder/containers/cv-editor-container";
 import {
 	Avatar,
 	AvatarFallback,
