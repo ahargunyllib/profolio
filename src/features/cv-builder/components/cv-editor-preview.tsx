@@ -12,8 +12,6 @@ import type { CVData } from "@/shared/repositories/cvs/dto";
 import { Download, RefreshCw } from "lucide-react";
 import { useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { useReactToPrint } from "react-to-print";
-import { toast } from "sonner";
 
 export default function CVEditorPreview() {
 	const form = useFormContext<CVData>();
@@ -47,23 +45,6 @@ export default function CVEditorPreview() {
 
 	const [isPrinting, setIsPrinting] = useState(false);
 	const cvRef = useRef<HTMLDivElement>(null);
-
-	// const handlePrint = useReactToPrint({
-	// 	contentRef: cvRef,
-	// 	documentTitle: `${firstName}-${lastName}-${jobName}_CV`,
-	// 	onBeforePrint: async () => {
-	// 		setIsPrinting(true);
-	// 	},
-	// 	onAfterPrint: () => {
-	// 		setIsPrinting(false);
-	// 	},
-	// 	onPrintError(errorLocation, error) {
-	// 		setIsPrinting(false);
-	// 		toast.error(
-	// 			`Failed to generate PDF. Please try again later. Error: ${error.message}`,
-	// 		);
-	// 	},
-	// });
 
 	// Custom PDF export function that uses browser's native print functionality
 	const handlePrint = () => {
