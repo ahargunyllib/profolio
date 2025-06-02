@@ -1,6 +1,36 @@
 import Footer from "@/features/landing/components/footer";
 import Navbar from "@/features/landing/components/navbar";
+import type { Metadata } from "next";
 import type React from "react";
+
+export const metadata: Metadata = {
+	title: "Profolio",
+	description:
+		"Profolio adalah aplikasi web untuk membuat, mengelola, dan mengoptimasi CV secara online dengan fitur ATS, AI summary, dan template profesional.",
+	openGraph: {
+		title: "Profolio",
+		description:
+			"Buat dan optimasi CV profesional secara mudah dan cepat dengan Profolio.",
+		url: "https://profolio.ahargunyllib.dev",
+		siteName: "Profolio",
+		images: [
+			{
+				url: "https://profolio.ahargunyllib.dev/profolio-logo.png",
+				width: 800,
+				height: 600,
+			},
+		],
+		locale: "id-ID",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Profolio",
+		description:
+			"Buat dan optimasi CV profesional secara mudah dan cepat dengan Profolio.",
+		site: "@profolioapp",
+	},
+};
 
 export default function MainLayout({
 	children,
