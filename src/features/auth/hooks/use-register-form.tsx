@@ -1,29 +1,26 @@
 "use client";
 
-import {
-	LoginSchema,
-	type TLoginRequest,
-} from "@/shared/repositories/auth/dto";
-import { useLoginMutation } from "@/shared/repositories/auth/query";
-import { zodResolver } from "@hookform/resolvers/zod";
+import type { TRegisterRequest } from "@/shared/repositories/auth/dto";
+import { useRegisterMutation } from "@/shared/repositories/auth/query";
 import { redirect, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-export const useLoginForm = () => {
-	const { mutate: login, isPending } = useLoginMutation();
+export const useRegisterForm = () => {
+	const { mutate: register, isPending } = useRegisterMutation();
 	const router = useRouter();
 
-	const form = useForm<TLoginRequest>({
-		resolver: zodResolver(LoginSchema),
+	const form = useForm<TRegisterRequest>({
 		defaultValues: {
 			email: "",
+			firstName: "",
+			lastName: "",
 			password: "",
 		},
 	});
 
 	const onSubmitHandler = form.handleSubmit((data) => {
-		login(data, {
+		register(data, {
 			onSuccess(res) {
 				if (!res.success) {
 					toast.error(res.message);
@@ -32,14 +29,14 @@ export const useLoginForm = () => {
 
 				toast.success(res.message);
 
-				router.push("/dashboard");
+				router.push("/login");
 			},
 		});
 	});
 
 	return {
 		...form,
-		isLoading: isPending,
 		onSubmitHandler,
+		isLoading: isPending,
 	};
 };

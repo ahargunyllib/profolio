@@ -1,19 +1,10 @@
-"use client";
-
-import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
-import { Label } from "@/shared/components/ui/label";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { LoginForm } from "@/features/auth/components/login-form";
 import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-export default function Page() {
-	const [isVisible, setIsVisible] = useState<boolean>(false);
 
-	const toggleVisibility = () => setIsVisible((prevState) => !prevState);
+export default function Page() {
 	return (
-		<section className="p-20 h-screen flex flex-row gap-36  ">
-			<div className="w-full flex flex-col gap-6 ">
+		<section className="p-20 h-screen flex flex-row gap-36">
+			<div className="w-full flex flex-col gap-6">
 				<div className="flex flex-row gap-5 items-center ">
 					<Image
 						src="/profolio-logo.png"
@@ -31,45 +22,7 @@ export default function Page() {
 					</p>
 				</div>
 
-				<div className="w-full flex flex-col gap-3">
-					<Label>Email</Label>
-					<Input type="email" placeholder="Enter your email address" />
-				</div>
-
-				<div className="w-full flex flex-col gap-3">
-					<Label>Password</Label>
-					<div className="relative">
-						<Input
-							className="pe-9"
-							placeholder="Password"
-							type={isVisible ? "text" : "password"}
-						/>
-						<button
-							className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-							type="button"
-							onClick={toggleVisibility}
-							aria-label={isVisible ? "Hide password" : "Show password"}
-							aria-pressed={isVisible}
-							aria-controls="password"
-						>
-							{isVisible ? (
-								<EyeOffIcon size={16} aria-hidden="true" />
-							) : (
-								<EyeIcon size={16} aria-hidden="true" />
-							)}
-						</button>
-					</div>
-				</div>
-
-				<div className="w-full flex flex-col gap-2">
-					<Button className="cursor-pointer w-full">Sign In</Button>
-					<p className="text-center text-md ">
-						Don’t have an account?{" "}
-						<Link href="/register" className="cursor-pointer text-primary font">
-							Sign up
-						</Link>
-					</p>
-				</div>
+				<LoginForm />
 			</div>
 
 			<div className="hidden lg:flex lg:flex-col w-full relative bg-primary p-10 rounded-xl justify-end">
