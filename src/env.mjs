@@ -13,7 +13,7 @@ export const env = createEnv({
 		SESSION_EXPIRATION_TIME: z.string().min(1).default("1d"),
 
 		OPEN_AI_API_KEY: z.string().min(1),
-		GEMINI_API_KEY: z.string().min(1),
+		GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
 
 		AWS_S3_ACCESS_KEY: z.string().min(1),
 		AWS_S3_SECRET_ACCESS_KEY: z.string().min(1),
@@ -41,7 +41,7 @@ export const env = createEnv({
 		SESSION_EXPIRATION_TIME: process.env.SESSION_EXPIRATION_TIME,
 
 		OPEN_AI_API_KEY: process.env.OPEN_AI_API_KEY,
-		GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+		GOOGLE_GENERATIVE_AI_API_KEY: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
 
 		AWS_S3_ACCESS_KEY: process.env.AWS_S3_ACCESS_KEY,
 		AWS_S3_SECRET_ACCESS_KEY: process.env.AWS_S3_SECRET_ACCESS_KEY,
