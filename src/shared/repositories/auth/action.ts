@@ -6,8 +6,8 @@ import { compare, hash } from "bcrypt-ts";
 import { eq } from "drizzle-orm";
 import { encodeToken } from "../../lib/decode";
 import { tryCatch } from "../../lib/try-catch";
-import type { ApiResponse } from "../../types";
-import { destroySession } from "../session-manager/action";
+import type { ApiResponse, User } from "../../types";
+import { destroySession, getSession } from "../session-manager/action";
 import type { TLoginRequest, TLoginResponse, TRegisterRequest } from "./dto";
 
 export async function login(
@@ -143,5 +143,54 @@ export async function register(
 		success: true,
 		data: null,
 		message: "Register successful",
+	};
+}
+
+export async function getMySession(): Promise<ApiResponse<User>> {
+	const { data: session, error: getSessionError } = await tryCatch(
+		getSession(),
+	);
+	if (getSessionError) {
+		return {
+			success: false,
+			error: "Session Error",
+			message: "An error occurred while retrieving the session",
+		};
+	}
+
+	if (!session || !session.isLoggedIn) {
+		return {
+			success: false,
+			error: "Unauthorized",
+			message: "You must be logged in to view your CVs",
+		};
+	}
+
+	const { data: users, error: errorSelect } = await tryCatch(
+		db.select().from(usersTable).where(eq(usersTable.id, session.userId)),
+	);
+
+	if (errorSelect) {
+		return {
+			success: false,
+			error: "Database Error",
+			message: "An error occurred while accessing the database",
+		};
+	}
+
+	const [user] = users;
+
+	if (!user) {
+		return {
+			success: false,
+			error: "Not Found",
+			message: "User not found",
+		};
+	}
+
+	return {
+		success: true,
+		data: user,
+		message: "Session retrieved successfully",
 	};
 }

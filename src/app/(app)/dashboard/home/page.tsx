@@ -5,6 +5,8 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@/shared/components/ui/avatar";
+import { getMySession } from "@/shared/repositories/auth/action";
+import { notFound } from "next/navigation";
 
 export default function Page() {
 	return (
@@ -25,12 +27,14 @@ export default function Page() {
 	);
 }
 
-function Header() {
-	const user = {
-		firstName: "John",
-		lastName: "Doe",
-		profilePictureURL: undefined,
-	};
+async function Header() {
+	const session = await getMySession();
+
+	if (!session.success) {
+		notFound();
+	}
+
+	const user = session.data;
 
 	return (
 		<header className="py-4 px-8 md:py-8 md:px-16 border-b flex flex-row items-center justify-between">
@@ -43,7 +47,10 @@ function Header() {
 					Welcome back, <span className="font-semibold">{user.firstName}</span>
 				</span>
 				<Avatar>
-					<AvatarImage src={user.profilePictureURL} alt="Profile Picture" />
+					<AvatarImage
+						src={user.profilePictureURL || undefined}
+						alt="Profile Picture"
+					/>
 					<AvatarFallback>
 						{user.firstName[0]}
 						{user.lastName[0]}

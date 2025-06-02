@@ -6,6 +6,7 @@ import {
 } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { Separator } from "@/shared/components/ui/separator";
+import { getMySession } from "@/shared/repositories/auth/action";
 import { getMyCVById } from "@/shared/repositories/cvs/action";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
@@ -41,12 +42,14 @@ export default async function Page({
 	);
 }
 
-function Header() {
-	const user = {
-		firstName: "John",
-		lastName: "Doe",
-		profilePictureURL: undefined,
-	};
+async function Header() {
+	const session = await getMySession();
+
+	if (!session.success) {
+		notFound();
+	}
+
+	const user = session.data;
 
 	return (
 		<header className="py-4 px-8 md:py-8 md:px-16 border-b flex flex-row items-center justify-between">
@@ -68,7 +71,10 @@ function Header() {
 				</div>
 			</div>
 			<Avatar>
-				<AvatarImage src={user.profilePictureURL} alt="Profile Picture" />
+				<AvatarImage
+					src={user.profilePictureURL || undefined}
+					alt="Profile Picture"
+				/>
 				<AvatarFallback>
 					{user.firstName[0]}
 					{user.lastName[0]}
