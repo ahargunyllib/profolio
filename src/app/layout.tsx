@@ -39,9 +39,6 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<head lang="en">
-				<link rel="icon" href="/profolio-logo.png" sizes="any" />
-			</head>
 			<body className={`${fontVariables} antialiased`}>
 				<Provider>{children}</Provider>
 			</body>
