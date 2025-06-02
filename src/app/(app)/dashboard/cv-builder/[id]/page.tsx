@@ -1,21 +1,10 @@
-import CVEditorContainer from "@/features/cv-builder/containers/cv-editor-container";
+import EditCVContainer from "@/features/cv-builder/containers/edit-cv-container";
 import HeaderContainer from "@/features/cv-builder/containers/header-container";
-import { getMyCVById } from "@/shared/repositories/cvs/action";
-import { notFound } from "next/navigation";
 
 export default async function Page({
 	params,
 }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;
-
-	const res = await getMyCVById(id);
-
-	if (!res.success) {
-		notFound();
-	}
-
-	const cv = res.data;
-
 	return (
 		<section className="min-h-dvh flex flex-col">
 			<HeaderContainer />
@@ -27,7 +16,7 @@ export default async function Page({
 						saved automatically.
 					</p>
 				</div>
-				<CVEditorContainer cv={cv} />
+				<EditCVContainer id={id} />
 			</div>
 		</section>
 	);
