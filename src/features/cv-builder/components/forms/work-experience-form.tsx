@@ -272,71 +272,13 @@ export default function WorkExperienceForm() {
 								control={form.control}
 								name={`data.jobExperiences.${index}.points`}
 								render={() => {
-									const pointsArray = useFieldArray({
-										control: form.control,
-										name: `data.jobExperiences.${index}.points`,
-									});
-
 									return (
-										<FormItem>
-											<div className="flex flex-row items-center justify-between">
-												<FormLabel>
-													Key Achievements (Bulleted Points)
-												</FormLabel>
-												<Button
-													disabled={isGeneratingPoints}
-													type="button"
-													onClick={() => onGeneratePoints(index)}
-												>
-													{isGeneratingPoints ? (
-														<RefreshCwIcon className="w-4 h-4 animate-spin" />
-													) : (
-														<SparklesIcon className="h-4 w-4" />
-													)}
-													{isGeneratingPoints
-														? "Generating..."
-														: "Generate Points"}
-												</Button>
-											</div>
-
-											{pointsArray.fields.map((point, pointIndex) => (
-												<FormField
-													key={point.id}
-													control={form.control}
-													name={`data.jobExperiences.${index}.points.${pointIndex}.point`}
-													render={({ field }) => (
-														<FormItem>
-															<div className="flex flex-row gap-2">
-																<FormControl>
-																	<Textarea
-																		placeholder="Key responsibility or achievement"
-																		{...field}
-																	/>
-																</FormControl>
-																<Button
-																	size="icon"
-																	variant="destructive"
-																	onClick={() => pointsArray.remove(pointIndex)}
-																>
-																	<Trash2Icon />
-																</Button>
-															</div>
-
-															<FormMessage />
-														</FormItem>
-													)}
-												/>
-											))}
-
-											<Button
-												className="w-min"
-												variant="secondary"
-												onClick={() => pointsArray.append({ point: "" })}
-											>
-												<PlusIcon />
-												Add Point
-											</Button>
-										</FormItem>
+										<WorkExperiencePointsForm
+											index={index}
+											onGeneratePoints={onGeneratePoints}
+											isGeneratingPoints={isGeneratingPoints}
+											form={form}
+										/>
 									);
 								}}
 							/>
@@ -345,5 +287,80 @@ export default function WorkExperienceForm() {
 				</div>
 			</CardContent>
 		</Card>
+	);
+}
+
+function WorkExperiencePointsForm({
+	index,
+	onGeneratePoints,
+	isGeneratingPoints,
+	form,
+}: {
+	index: number;
+	onGeneratePoints: (index: number) => void;
+	isGeneratingPoints: boolean;
+	form: ReturnType<typeof useFormContext<CVData>>;
+}) {
+	const pointsArray = useFieldArray({
+		control: form.control,
+		name: `data.jobExperiences.${index}.points`,
+	});
+
+	return (
+		<FormItem>
+			<div className="flex flex-row items-center justify-between">
+				<FormLabel>Key Achievements (Bulleted Points)</FormLabel>
+				<Button
+					disabled={isGeneratingPoints}
+					type="button"
+					onClick={() => onGeneratePoints(index)}
+				>
+					{isGeneratingPoints ? (
+						<RefreshCwIcon className="w-4 h-4 animate-spin" />
+					) : (
+						<SparklesIcon className="h-4 w-4" />
+					)}
+					{isGeneratingPoints ? "Generating..." : "Generate Points"}
+				</Button>
+			</div>
+
+			{pointsArray.fields.map((point, pointIndex) => (
+				<FormField
+					key={point.id}
+					control={form.control}
+					name={`data.jobExperiences.${index}.points.${pointIndex}.point`}
+					render={({ field }) => (
+						<FormItem>
+							<div className="flex flex-row gap-2">
+								<FormControl>
+									<Textarea
+										placeholder="Key responsibility or achievement"
+										{...field}
+									/>
+								</FormControl>
+								<Button
+									size="icon"
+									variant="destructive"
+									onClick={() => pointsArray.remove(pointIndex)}
+								>
+									<Trash2Icon />
+								</Button>
+							</div>
+
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+			))}
+
+			<Button
+				className="w-min"
+				variant="secondary"
+				onClick={() => pointsArray.append({ point: "" })}
+			>
+				<PlusIcon />
+				Add Point
+			</Button>
+		</FormItem>
 	);
 }
