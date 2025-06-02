@@ -8,7 +8,6 @@ import {
 	CardTitle,
 } from "@/shared/components/ui/card";
 import {
-	Form,
 	FormControl,
 	FormField,
 	FormItem,
@@ -48,82 +47,80 @@ export default function SkillsForm() {
 				</CardAction>
 			</CardHeader>
 			<CardContent>
-				<Form {...form}>
-					<div className="space-y-4">
-						{skillsArray.fields.length === 0 && (
-							<p className="text-muted-foreground text-center text-xs">
-								No skills added yet. Click "Add Skill" to include your skills.
-							</p>
-						)}
-						{skillsArray.fields.map((skill, skillIndex) => (
-							<FormField
-								key={skill.id}
-								control={form.control}
-								name={`data.skills.${skillIndex}.name`}
-								render={({ field }) => (
-									<FormItem>
-										<div className="flex flex-row gap-2">
-											<FormControl>
-												<Input
-													id={`skills.${skillIndex}.name`}
-													placeholder="Skill Name"
-													{...field}
-												/>
-											</FormControl>
-											<Button
-												size="icon"
-												variant="destructive"
-												onClick={() => skillsArray.remove(skillIndex)}
-											>
-												<Trash2Icon />
-											</Button>
-										</div>
+				<div className="space-y-4">
+					{skillsArray.fields.length === 0 && (
+						<p className="text-muted-foreground text-center text-xs">
+							No skills added yet. Click "Add Skill" to include your skills.
+						</p>
+					)}
+					{skillsArray.fields.map((skill, skillIndex) => (
+						<FormField
+							key={skill.id}
+							control={form.control}
+							name={`data.skills.${skillIndex}.name`}
+							render={({ field }) => (
+								<FormItem>
+									<div className="flex flex-row gap-2">
+										<FormControl>
+											<Input
+												id={`skills.${skillIndex}.name`}
+												placeholder="Skill Name"
+												{...field}
+											/>
+										</FormControl>
+										<Button
+											size="icon"
+											variant="destructive"
+											onClick={() => skillsArray.remove(skillIndex)}
+										>
+											<Trash2Icon />
+										</Button>
+									</div>
 
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						))}
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					))}
 
-						<Card>
-							<CardHeader>
-								<CardTitle className="text-base">Skill Categories</CardTitle>
-								<CardDescription>
-									Consider organizing your skills into categories for better ATS
-									optimization:
-								</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<div className="grid md:grid-cols-2 gap-4 text-sm">
-									<div>
-										<h4 className="font-medium mb-2">Technical Skills:</h4>
-										<p className="text-muted-foreground">
-											Programming languages, frameworks, tools
-										</p>
-									</div>
-									<div>
-										<h4 className="font-medium mb-2">Soft Skills:</h4>
-										<p className="text-muted-foreground">
-											Communication, leadership, problem-solving
-										</p>
-									</div>
-									<div>
-										<h4 className="font-medium mb-2">Industry Skills:</h4>
-										<p className="text-muted-foreground">
-											Domain-specific knowledge and certifications
-										</p>
-									</div>
-									<div>
-										<h4 className="font-medium mb-2">Languages:</h4>
-										<p className="text-muted-foreground">
-											Spoken languages and proficiency levels
-										</p>
-									</div>
+					<Card>
+						<CardHeader>
+							<CardTitle className="text-base">Skill Categories</CardTitle>
+							<CardDescription>
+								Consider organizing your skills into categories for better ATS
+								optimization:
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<div className="grid md:grid-cols-2 gap-4 text-sm">
+								<div>
+									<h4 className="font-medium mb-2">Technical Skills:</h4>
+									<p className="text-muted-foreground">
+										Programming languages, frameworks, tools
+									</p>
 								</div>
-							</CardContent>
-						</Card>
-					</div>
-				</Form>
+								<div>
+									<h4 className="font-medium mb-2">Soft Skills:</h4>
+									<p className="text-muted-foreground">
+										Communication, leadership, problem-solving
+									</p>
+								</div>
+								<div>
+									<h4 className="font-medium mb-2">Industry Skills:</h4>
+									<p className="text-muted-foreground">
+										Domain-specific knowledge and certifications
+									</p>
+								</div>
+								<div>
+									<h4 className="font-medium mb-2">Languages:</h4>
+									<p className="text-muted-foreground">
+										Spoken languages and proficiency levels
+									</p>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+				</div>
 			</CardContent>
 		</Card>
 	);
