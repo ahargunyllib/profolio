@@ -178,11 +178,7 @@ export default function CVEditorPreview() {
 												)}
 												<ul className="list-disc list-inside text-xs ml-4">
 													{jobExperience.points.map(({ point }) => {
-														return (
-															<li key={point} className="asda">
-																{point}
-															</li>
-														);
+														return <li key={point}>{point}</li>;
 													})}
 												</ul>
 											</div>
