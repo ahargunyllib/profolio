@@ -22,12 +22,12 @@ import {
 	PopoverTrigger,
 } from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib/utils";
-import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVRequest } from "@/shared/repositories/cvs/dto";
 import { CalendarIcon, PlusIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 export default function EducationForm() {
-	const form = useFormContext<TCreateCVSchema>();
+	const form = useFormContext<TCreateCVRequest>();
 	const educationsArray = useFieldArray({
 		control: form.control,
 		name: "data.educations",
@@ -163,6 +163,19 @@ export default function EducationForm() {
 													placeholder="3.5"
 													inputMode="decimal"
 													{...field}
+													onChange={(e) => {
+														const value = Number.parseFloat(e.target.value);
+
+														if (
+															!Number.isNaN(value) &&
+															value >= 0 &&
+															value <= 4
+														) {
+															field.onChange(value);
+														} else {
+															field.onChange("");
+														}
+													}}
 												/>
 											</FormControl>
 											<FormMessage />
@@ -207,7 +220,13 @@ export default function EducationForm() {
 													<Calendar
 														mode="single"
 														selected={field.value}
-														onSelect={field.onChange}
+														onSelect={(e) => {
+															if (!e) {
+																field.onChange(new Date());
+															}
+
+															field.onChange(e);
+														}}
 														disabled={(date) =>
 															date > new Date() || date < new Date("1900-01-01")
 														}

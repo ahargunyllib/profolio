@@ -1,7 +1,10 @@
-import CVEditorContainer from "@/features/cv-builder/containers/cv-editor-container";
+import EditCVContainer from "@/features/cv-builder/containers/edit-cv-container";
 import HeaderContainer from "@/features/cv-builder/containers/header-container";
 
-export default function Page() {
+export default async function Page({
+	params,
+}: { params: Promise<{ id: string }> }) {
+	const { id } = await params;
 	return (
 		<section className="min-h-dvh flex flex-col">
 			<HeaderContainer />
@@ -13,7 +16,7 @@ export default function Page() {
 						saved automatically.
 					</p>
 				</div>
-				<CVEditorContainer />
+				<EditCVContainer id={id} />
 			</div>
 		</section>
 	);

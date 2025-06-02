@@ -1,19 +1,17 @@
-import type { RoleKey } from "../lib/enums";
-
 export type User = {
 	id: string;
 	firstName: string;
 	lastName: string;
 	email: string;
-	role: RoleKey;
+	role: number;
 	// password: string;
-	profilePictureURL?: string;
-	phoneNumber?: string;
-	location?: string;
-	website?: string;
-	bio?: string;
-	currentJobTitle?: string;
-	currentCompany?: string;
-	createdAt: string;
-	updatedAt: string;
+	profilePictureURL: string | null;
+	phoneNumber: string | null;
+	location: string | null;
+	website: string | null;
+	bio: string | null;
+	currentJobTitle: string | null;
+	currentCompany: string | null;
+	createdAt: Date;
+	updatedAt: Date;
 };

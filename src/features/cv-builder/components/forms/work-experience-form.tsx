@@ -23,10 +23,9 @@ import {
 	PopoverTrigger,
 } from "@/shared/components/ui/popover";
 import { Textarea } from "@/shared/components/ui/textarea";
-import { tryCatch } from "@/shared/lib/try-catch";
 import { cn } from "@/shared/lib/utils";
-import { generatePoints } from "@/shared/repositories/cvs/action";
-import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVRequest } from "@/shared/repositories/cvs/dto";
+import { useGeneratePointsMutation } from "@/shared/repositories/cvs/query";
 import {
 	CalendarIcon,
 	PlusIcon,
@@ -34,31 +33,30 @@ import {
 	SparklesIcon,
 	Trash2Icon,
 } from "lucide-react";
-import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function WorkExperienceForm() {
-	const form = useFormContext<TCreateCVSchema>();
+	const form = useFormContext<TCreateCVRequest>();
 	const workExperienceArray = useFieldArray({
 		control: form.control,
 		name: "data.jobExperiences",
 	});
-	const [isGeneratingPoints, setIsGeneratingPoints] = useState(false);
+	const { mutate: generatePoints, isPending: isGeneratingPoints } =
+		useGeneratePointsMutation();
 
 	const onGeneratePoints = async (index: number) => {
 		const req = form.getValues();
-		setIsGeneratingPoints(true);
-		const { data: points, error } = await tryCatch(
-			generatePoints(req.data.jobExperiences[index]),
-		);
-		setIsGeneratingPoints(false);
-		if (error) {
-			toast.error("Failed to generate points. Please try again.");
-			return;
-		}
+		generatePoints(req.data.jobExperiences[index], {
+			onSuccess(res) {
+				if (!res.success) {
+					toast.error(res.message);
+					return;
+				}
 
-		form.setValue(`data.jobExperiences.${index}.points`, points);
+				form.setValue(`data.jobExperiences.${index}.points`, res.data);
+			},
+		});
 	};
 
 	return (
@@ -197,7 +195,14 @@ export default function WorkExperienceForm() {
 													<Calendar
 														mode="single"
 														selected={field.value}
-														onSelect={field.onChange}
+														onSelect={(e) => {
+															if (!e) {
+																field.onChange(new Date());
+																return;
+															}
+
+															field.onChange(e);
+														}}
 														disabled={(date) =>
 															date > new Date() || date < new Date("1900-01-01")
 														}
@@ -299,7 +304,7 @@ function WorkExperiencePointsForm({
 	index: number;
 	onGeneratePoints: (index: number) => void;
 	isGeneratingPoints: boolean;
-	form: ReturnType<typeof useFormContext<TCreateCVSchema>>;
+	form: ReturnType<typeof useFormContext<TCreateCVRequest>>;
 }) {
 	const pointsArray = useFieldArray({
 		control: form.control,

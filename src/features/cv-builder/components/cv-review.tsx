@@ -9,10 +9,9 @@ import {
 	CardTitle,
 } from "@/shared/components/ui/card";
 import { Progress } from "@/shared/components/ui/progress";
-import { tryCatch } from "@/shared/lib/try-catch";
 import { cn } from "@/shared/lib/utils";
-import { generateGrade } from "@/shared/repositories/cvs/action";
-import type { TCreateCVSchema } from "@/shared/repositories/cvs/dto";
+import type { TCreateCVRequest } from "@/shared/repositories/cvs/dto";
+import { useGenerateGradeMutation } from "@/shared/repositories/cvs/query";
 import type { CV } from "@/shared/types";
 import { ChartColumnIncreasingIcon, RefreshCwIcon } from "lucide-react";
 import { useState } from "react";
@@ -20,26 +19,33 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function CVGrade() {
-	const form = useFormContext<TCreateCVSchema>();
-	const [isGeneratingGrade, setIsGeneratingGrade] = useState(false);
+	const form = useFormContext<TCreateCVRequest>();
 	const [grade, setGrade] = useState<{
 		atsScore: CV["atsScore"];
 		suggestions: CV["suggestions"];
 	} | null>(null);
 
-	const onGenerateGrade = async () => {
-		setIsGeneratingGrade(true);
+	const { mutate: generateGrade, isPending: isGeneratingGrade } =
+		useGenerateGradeMutation();
 
+	const onGenerateGrade = () => {
 		const req = form.getValues();
-		const { data, error } = await tryCatch(generateGrade(req));
-		setIsGeneratingGrade(false);
+		generateGrade(req, {
+			onSuccess(res) {
+				if (!res.success) {
+					toast.error(res.message);
+					return;
+				}
 
-		if (error) {
-			toast.error("Failed to generate CV grade. Please try again later.");
-			return;
-		}
+				form.setValue("atsScore", res.data.atsScore);
+				form.setValue("suggestions", res.data.suggestions);
 
-		setGrade(data);
+				setGrade({
+					atsScore: res.data.atsScore,
+					suggestions: res.data.suggestions,
+				});
+			},
+		});
 	};
 
 	return (
