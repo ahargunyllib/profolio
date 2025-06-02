@@ -232,8 +232,6 @@ export const getMyCVs = async (query: {
 	search: string | null;
 	status: number | null;
 }): Promise<ApiResponse<CV[]>> => {
-	console.log(query);
-
 	const { data: session, error: getSessionError } = await tryCatch(
 		getSession(),
 	);
