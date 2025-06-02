@@ -31,3 +31,27 @@ export const UpdatePasswordSchema = z
 	});
 
 export type TUpdatePasswordRequest = z.infer<typeof UpdatePasswordSchema>;
+
+export const UpdateProfileSchema = z.object({
+	firstName: z.string().min(1),
+	lastName: z.string().min(1),
+	email: z.string().email(),
+	phoneNumber: z.string().optional(),
+	location: z.string().optional(),
+	website: z.string().url().optional(),
+	bio: z.string().optional(),
+	currentJobTitle: z.string().optional(),
+	currentCompany: z.string().optional(),
+});
+
+export type TUpdateProfileRequest = z.infer<typeof UpdateProfileSchema>;
+
+export const UpdateProfilePictureSchema = z.object({
+	file: z.instanceof(File).refine((file) => file.size <= 2 * 1024 * 1024, {
+		message: "File size must be less than 2MB",
+	}),
+});
+
+export type TUpdateProfilePictureRequest = z.infer<
+	typeof UpdateProfilePictureSchema
+>;

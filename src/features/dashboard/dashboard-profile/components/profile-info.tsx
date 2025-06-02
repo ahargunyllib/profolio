@@ -1,15 +1,15 @@
 "use client";
 
 import { Button } from "@/shared/components/ui/button";
+import type { User } from "@/shared/types";
 import { Edit, Globe, Mail, MapPin, Phone } from "lucide-react";
-import type { ProfileData } from "../data/profile-type";
 
-interface ProfileInfoProps {
-	profileData: ProfileData;
+type Props = {
+	user: User;
 	onEdit: () => void;
-}
+};
 
-export default function ProfileInfo({ profileData, onEdit }: ProfileInfoProps) {
+export default function ProfileInfo({ user, onEdit }: Props) {
 	return (
 		<>
 			<div className="space-y-6">
@@ -18,7 +18,7 @@ export default function ProfileInfo({ profileData, onEdit }: ProfileInfoProps) {
 						Contact Information
 					</h3>
 					<Button
-						onClick={onEdit}
+						onClick={() => onEdit()}
 						className="px-3 py-1 rounded flex items-center text-sm"
 					>
 						<Edit className="w-4 h-4 mr-1" />
@@ -33,7 +33,7 @@ export default function ProfileInfo({ profileData, onEdit }: ProfileInfoProps) {
 						</div>
 						<div>
 							<p className="text-sm text-gray-500">Email</p>
-							<p className="font-medium">{profileData.email}</p>
+							<p className="font-medium">{user.email}</p>
 						</div>
 					</div>
 
@@ -43,7 +43,7 @@ export default function ProfileInfo({ profileData, onEdit }: ProfileInfoProps) {
 						</div>
 						<div>
 							<p className="text-sm text-gray-500">Phone</p>
-							<p className="font-medium">{profileData.phone}</p>
+							<p className="font-medium">{user.phoneNumber ?? "-"}</p>
 						</div>
 					</div>
 
@@ -53,7 +53,7 @@ export default function ProfileInfo({ profileData, onEdit }: ProfileInfoProps) {
 						</div>
 						<div>
 							<p className="text-sm text-gray-500">Location</p>
-							<p className="font-medium">{profileData.location}</p>
+							<p className="font-medium">{user.location ?? "-"}</p>
 						</div>
 					</div>
 
@@ -63,20 +63,24 @@ export default function ProfileInfo({ profileData, onEdit }: ProfileInfoProps) {
 						</div>
 						<div>
 							<p className="text-sm text-gray-500">Website</p>
-							<a
-								href={profileData.website}
-								className="font-medium text-blue-600 hover:underline"
-							>
-								{profileData.website.replace(/(^\w+:|^)\/\//, "")}
-							</a>
+							{user.website ? (
+								<a
+									href={user.website}
+									className="font-medium text-blue-600 hover:underline"
+								>
+									{user.website.replace(/(^\w+:|^)\/\//, "")}
+								</a>
+							) : (
+								<p className="font-medium text-gray-500">-</p>
+							)}
 						</div>
 					</div>
 				</div>
 			</div>
-			{/* About Me di bawah, full width */}
+
 			<div className="mt-8">
 				<h4 className="text-sm text-gray-500 mb-2">About Me</h4>
-				<p className="text-gray-700 leading-relaxed">{profileData.bio}</p>
+				<p className="text-gray-700 leading-relaxed">{user.bio || "-"}</p>
 			</div>
 		</>
 	);

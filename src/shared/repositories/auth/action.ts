@@ -2,6 +2,7 @@
 
 import { db } from "@/server/db";
 import { usersTable } from "@/server/db/schema/users";
+import { uploadFileToS3 } from "@/server/s3";
 import { compare, hash } from "bcrypt-ts";
 import { eq } from "drizzle-orm";
 import { encodeToken } from "../../lib/decode";
@@ -13,6 +14,8 @@ import type {
 	TLoginResponse,
 	TRegisterRequest,
 	TUpdatePasswordRequest,
+	TUpdateProfilePictureRequest,
+	TUpdateProfileRequest,
 } from "./dto";
 
 export async function login(
@@ -316,5 +319,112 @@ export async function deleteMyAccount(): Promise<ApiResponse<null>> {
 		success: true,
 		data: null,
 		message: "Account deleted successfully",
+	};
+}
+
+export async function updateMyProfile(
+	req: TUpdateProfileRequest,
+): Promise<ApiResponse<null>> {
+	const { data: session, error: getSessionError } = await tryCatch(
+		getSession(),
+	);
+	if (getSessionError) {
+		return {
+			success: false,
+			error: "Session Error",
+			message: "An error occurred while retrieving the session",
+		};
+	}
+
+	if (!session || !session.isLoggedIn) {
+		return {
+			success: false,
+			error: "Unauthorized",
+			message: "You must be logged in to update your profile",
+		};
+	}
+
+	await tryCatch(
+		db
+			.update(usersTable)
+			.set({
+				firstName: req.firstName,
+				lastName: req.lastName,
+				email: req.email,
+				phoneNumber: req.phoneNumber,
+				location: req.location,
+				website: req.website,
+				bio: req.bio,
+				currentJobTitle: req.currentJobTitle,
+				currentCompany: req.currentCompany,
+			})
+			.where(eq(usersTable.id, session.userId)),
+	);
+
+	return {
+		success: true,
+		data: null,
+		message: "Profile updated successfully",
+	};
+}
+
+export async function updateMyProfilePicture(
+	req: TUpdateProfilePictureRequest,
+): Promise<ApiResponse<null>> {
+	const { data: session, error: getSessionError } = await tryCatch(
+		getSession(),
+	);
+	if (getSessionError) {
+		return {
+			success: false,
+			error: "Session Error",
+			message: "An error occurred while retrieving the session",
+		};
+	}
+
+	if (!session || !session.isLoggedIn) {
+		return {
+			success: false,
+			error: "Unauthorized",
+			message: "You must be logged in to update your profile picture",
+		};
+	}
+
+	// Logic to handle file upload and update user profile picture
+	// This is a placeholder as the actual implementation may vary
+	// You would typically save the file to a storage service and update the user's profile with the new picture URL
+
+	const { data: res, error: uploadError } = await tryCatch(
+		uploadFileToS3(req.file),
+	);
+	if (uploadError) {
+		return {
+			success: false,
+			error: "Upload Error",
+			message: "An error occurred while uploading the profile picture",
+		};
+	}
+
+	if (!res.success || !res.data) {
+		return {
+			success: false,
+			error: res.error || "Unknown Error",
+			message: res.message,
+		};
+	}
+
+	const profilePictureURL = res.data.fileUrl;
+
+	await tryCatch(
+		db
+			.update(usersTable)
+			.set({ profilePictureURL })
+			.where(eq(usersTable.id, session.userId)),
+	);
+
+	return {
+		success: true,
+		data: null,
+		message: "Profile picture updated successfully",
 	};
 }

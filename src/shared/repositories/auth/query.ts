@@ -11,12 +11,14 @@ import {
 	login,
 	logout,
 	register,
+	updateMyProfilePicture,
 	updatePassword,
 } from "./action";
 import type {
 	TLoginRequest,
 	TRegisterRequest,
 	TUpdatePasswordRequest,
+	TUpdateProfilePictureRequest,
 } from "./dto";
 
 export const useLoginMutation = () => {
@@ -94,6 +96,18 @@ export const useDeleteMyAccountMutation = () => {
 		mutationFn: () => deleteMyAccount(),
 		onSuccess: () => {
 			queryClient.resetQueries({ queryKey: ["auth"] });
+		},
+	});
+};
+
+export const useUpdateProfilePictureMutation = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationKey: ["auth", "update-profile-picture"],
+		mutationFn: (data: TUpdateProfilePictureRequest) =>
+			updateMyProfilePicture(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["auth"] });
 		},
 	});
 };

@@ -1,192 +1,224 @@
 "use client";
 
-import type { ProfileData } from "../data/profile-type";
-
 import { Button } from "@/shared/components/ui/button";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+} from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
-import { Save, X } from "lucide-react";
+import {
+	type TUpdateProfileRequest,
+	UpdateProfileSchema,
+} from "@/shared/repositories/auth/dto";
+import type { User } from "@/shared/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SaveIcon, XIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
 
-interface ProfileFormProps {
-	editProfileData: ProfileData;
-	setEditProfileData: (data: ProfileData) => void;
-	onSave: () => void;
+type Props = {
 	onCancel: () => void;
-}
+	user: User;
+};
 
-export default function ProfileForm({
-	editProfileData,
-	setEditProfileData,
-	onSave,
-	onCancel,
-}: ProfileFormProps) {
+export default function ProfileForm({ onCancel, user }: Props) {
+	const form = useForm<TUpdateProfileRequest>({
+		resolver: zodResolver(UpdateProfileSchema),
+		defaultValues: {
+			firstName: user.firstName || "",
+			lastName: user.lastName || "",
+			email: user.email || "",
+			phoneNumber: user.phoneNumber || "",
+			location: user.location || "",
+			website: user.website || "",
+			currentJobTitle: user.currentJobTitle || "",
+			currentCompany: user.currentCompany || "",
+			bio: user.bio || "",
+		},
+	});
+
+	const onSubmitHandler = form.handleSubmit((data) => {
+		// Handle form submission logic here
+	});
+
 	return (
-		<div className="space-y-6 border rounded-lg p-6 bg-white">
-			<div className="flex justify-between items-center">
-				<h3 className="text-lg font-semibold text-gray-900">
-					Edit Personal Information
-				</h3>
-				<div className="flex space-x-2">
-					<Button
-						onClick={onSave}
-						className="px-4 py-2 rounded text-sm flex items-center"
-					>
-						<Save className="w-4 h-4 mr-2" />
-						Save
-					</Button>
-					<Button
-						onClick={onCancel}
-						variant="outline"
-						className="px-4 py-2 rounded text-sm flex items-center"
-					>
-						<X className="w-4 h-4 mr-2" />
-						Cancel
-					</Button>
+		<Form {...form}>
+			<form
+				onSubmit={onSubmitHandler}
+				className="space-y-6 border rounded-lg p-6"
+			>
+				<div className="flex justify-between items-center">
+					<h3 className="text-lg font-semibold">Edit Personal Information</h3>
+					<div className="flex space-x-2">
+						<Button
+							type="submit"
+							className="px-4 py-2 rounded text-sm flex items-center"
+						>
+							<SaveIcon />
+							Save
+						</Button>
+						<Button
+							onClick={onCancel}
+							variant="outline"
+							className="px-4 py-2 rounded text-sm flex items-center"
+						>
+							<XIcon />
+							Cancel
+						</Button>
+					</div>
 				</div>
-			</div>
 
-			<div className="grid md:grid-cols-2 gap-4">
-				<div>
-					<Label htmlFor="firstName">First Name</Label>
-					<Input
-						id="firstName"
-						value={editProfileData.firstName}
-						onChange={(e) =>
-							setEditProfileData({
-								...editProfileData,
-								firstName: e.target.value,
-							})
-						}
-						className="mt-1"
+				<div className="grid md:grid-cols-2 gap-4">
+					<FormField
+						control={form.control}
+						name="firstName"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<Label htmlFor="firstName">First Name</Label>
+									<FormControl>
+										<Input id="firstName" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					<FormField
+						control={form.control}
+						name="lastName"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<Label htmlFor="lastName">Last Name</Label>
+									<FormControl>
+										<Input id="lastName" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
 					/>
 				</div>
-				<div>
-					<Label htmlFor="lastName">Last Name</Label>
-					<Input
-						id="lastName"
-						value={editProfileData.lastName}
-						onChange={(e) =>
-							setEditProfileData({
-								...editProfileData,
-								lastName: e.target.value,
-							})
-						}
-						className="mt-1"
-					/>
-				</div>
-			</div>
 
-			<div>
-				<Label htmlFor="email">Email Address</Label>
-				<Input
-					id="email"
-					type="email"
-					value={editProfileData.email}
-					onChange={(e) =>
-						setEditProfileData({
-							...editProfileData,
-							email: e.target.value,
-						})
-					}
-					className="mt-1"
+				<FormField
+					control={form.control}
+					name="email"
+					render={({ field }) => {
+						return (
+							<FormItem>
+								<Label htmlFor="email">Email</Label>
+								<FormControl>
+									<Input id="email" type="email" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
 				/>
-			</div>
 
-			<div className="grid md:grid-cols-2 gap-4">
-				<div>
-					<Label htmlFor="phone">Phone Number</Label>
-					<Input
-						id="phone"
-						value={editProfileData.phone}
-						onChange={(e) =>
-							setEditProfileData({
-								...editProfileData,
-								phone: e.target.value,
-							})
-						}
-						className="mt-1"
+				<div className="grid md:grid-cols-2 gap-4">
+					<FormField
+						control={form.control}
+						name="phoneNumber"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<Label htmlFor="phoneNumber">Phone Number</Label>
+									<FormControl>
+										<Input id="phoneNumber" type="tel" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					<FormField
+						control={form.control}
+						name="location"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<Label htmlFor="location">Location</Label>
+									<FormControl>
+										<Input id="location" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
 					/>
 				</div>
-				<div>
-					<Label htmlFor="location">Location</Label>
-					<Input
-						id="location"
-						value={editProfileData.location}
-						onChange={(e) =>
-							setEditProfileData({
-								...editProfileData,
-								location: e.target.value,
-							})
-						}
-						className="mt-1"
-					/>
-				</div>
-			</div>
 
-			<div>
-				<Label htmlFor="website">Website/Portfolio</Label>
-				<Input
-					id="website"
-					value={editProfileData.website}
-					onChange={(e) =>
-						setEditProfileData({
-							...editProfileData,
-							website: e.target.value,
-						})
-					}
-					className="mt-1"
-					placeholder="https://yourwebsite.com"
+				<FormField
+					control={form.control}
+					name="website"
+					render={({ field }) => {
+						return (
+							<FormItem>
+								<Label htmlFor="website">Website</Label>
+								<FormControl>
+									<Input id="website" type="url" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
 				/>
-			</div>
 
-			<div className="grid md:grid-cols-2 gap-4">
-				<div>
-					<Label htmlFor="jobTitle">Current Job Title</Label>
-					<Input
-						id="jobTitle"
-						value={editProfileData.jobTitle}
-						onChange={(e) =>
-							setEditProfileData({
-								...editProfileData,
-								jobTitle: e.target.value,
-							})
-						}
-						className="mt-1"
+				<div className="grid md:grid-cols-2 gap-4">
+					<FormField
+						control={form.control}
+						name="currentJobTitle"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<Label htmlFor="currentJobTitle">Current Job Title</Label>
+									<FormControl>
+										<Input id="currentJobTitle" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
+					<FormField
+						control={form.control}
+						name="currentCompany"
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<Label htmlFor="currentCompany">Current Company</Label>
+									<FormControl>
+										<Input id="currentCompany" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
 					/>
 				</div>
-				<div>
-					<Label htmlFor="company">Current Company</Label>
-					<Input
-						id="company"
-						value={editProfileData.company}
-						onChange={(e) =>
-							setEditProfileData({
-								...editProfileData,
-								company: e.target.value,
-							})
-						}
-						className="mt-1"
-					/>
-				</div>
-			</div>
 
-			<div>
-				<Label htmlFor="bio">Bio</Label>
-				<Textarea
-					id="bio"
-					value={editProfileData.bio}
-					onChange={(e) =>
-						setEditProfileData({
-							...editProfileData,
-							bio: e.target.value,
-						})
-					}
-					className="mt-1"
-					rows={3}
-					placeholder="Tell us about yourself..."
+				<FormField
+					control={form.control}
+					name="bio"
+					render={({ field }) => {
+						return (
+							<FormItem>
+								<Label htmlFor="bio">Bio</Label>
+								<FormControl>
+									<Textarea id="bio" rows={3} {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
 				/>
-			</div>
-		</div>
+			</form>
+		</Form>
 	);
 }
