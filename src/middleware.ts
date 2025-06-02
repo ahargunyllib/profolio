@@ -2,7 +2,6 @@ import { type NextRequest, NextResponse } from "next/server";
 import { authGuard } from "./middlewares/auth-guard";
 import { devOnlyGuard } from "./middlewares/dev-only-guard";
 import { redirectRules } from "./middlewares/redirect-rules";
-import { roleBasedAccess } from "./middlewares/role-access";
 import { getSession } from "./shared/repositories/session-manager/action";
 import type {
 	MiddlewareContext,
@@ -14,7 +13,7 @@ export async function middleware(req: NextRequest) {
 		devOnlyGuard,
 		authGuard,
 		redirectRules,
-		roleBasedAccess,
+		// roleBasedAccess,
 	]);
 }
 
