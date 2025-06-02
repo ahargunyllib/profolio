@@ -528,8 +528,6 @@ export const getMyCVStatistic = async (): Promise<
 		};
 	}
 
-	console.log(stats);
-
 	return {
 		success: true,
 		message: "CV statistics retrieved successfully",

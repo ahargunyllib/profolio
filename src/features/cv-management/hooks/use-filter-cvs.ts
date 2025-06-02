@@ -30,8 +30,6 @@ export const useFilterCVs = () => {
 			urlSearchParams.delete("status");
 		}
 
-		console.log("useFilterCVs", debouncedFilter);
-
 		router.replace(`${pathname}?${urlSearchParams.toString()}`);
 	}, [debouncedFilter, router, pathname, searchParams]);
 

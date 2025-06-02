@@ -46,8 +46,6 @@ export const useGetMyCVsQuery = () => {
 		status,
 	};
 
-	console.log(query, "query.ts");
-
 	return useQuery({
 		queryKey: ["cvs", query],
 		queryFn: () => getMyCVs(query),
