@@ -9,6 +9,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Separator } from "@/shared/components/ui/separator";
 import { useGetMySessionQuery } from "@/shared/repositories/auth/query";
 import { ArrowLeftIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function HeaderContainer() {
@@ -29,7 +30,12 @@ export default function HeaderContainer() {
 				</Button>
 				<Separator orientation="vertical" />
 				<div className="flex flex-row gap-2 items-center">
-					<div className="bg-primary size-12 rounded-lg" />
+					<Image
+						src="/profolio-logo.png"
+						alt="profolio"
+						width={48}
+						height={48}
+					/>
 					<span className="text-2xl font-semibold">Profolio CV Builder</span>
 				</div>
 			</div>

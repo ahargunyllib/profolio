@@ -6,6 +6,7 @@ import {
 	AvatarImage,
 } from "@/shared/components/ui/avatar";
 import { useGetMySessionQuery } from "@/shared/repositories/auth/query";
+import Image from "next/image";
 
 export default function HeaderContainer() {
 	const { data: res, isLoading } = useGetMySessionQuery();
@@ -13,7 +14,7 @@ export default function HeaderContainer() {
 	return (
 		<header className="py-4 px-8 md:py-8 md:px-16 border-b flex flex-row items-center justify-between">
 			<div className="flex flex-row gap-2 items-center">
-				<div className="bg-primary size-12 rounded-lg" />
+				<Image src="/profolio-logo.png" alt="profolio" width={48} height={48} />
 				<span className="text-2xl font-semibold">Profolio</span>
 			</div>
 			<div className="flex flex-row gap-4 items-center">
