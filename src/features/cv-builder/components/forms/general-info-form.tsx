@@ -24,7 +24,7 @@ export default function GeneralInfoForm() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Personal Info</CardTitle>
+				<CardTitle>General Info</CardTitle>
 				<CardDescription>
 					Tell us about yourself. This information will be used to create your
 					CV.
