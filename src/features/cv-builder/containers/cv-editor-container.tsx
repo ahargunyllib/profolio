@@ -1,10 +1,16 @@
+"use client";
+
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
 import {
 	CreateCVSchema,
 	type TCreateCVRequest,
 } from "@/shared/repositories/cvs/dto";
-import { useCreateCVMutation } from "@/shared/repositories/cvs/query";
+import {
+	useCreateCVMutation,
+	useUpdateCVMutation,
+} from "@/shared/repositories/cvs/query";
+import type { CV } from "@/shared/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -15,35 +21,63 @@ import CVEditorPreview from "../components/cv-editor-preview";
 import CVEditorStepper from "../components/cv-editor-stepper";
 import { steps } from "../data/steps";
 
-export default function CVEditorContainer() {
+type Props = {
+	cv?: CV;
+};
+
+export default function CVEditorContainer({ cv }: Props) {
 	const [currentStep, setCurrentStep] = useState(1);
 	const Comp = steps[currentStep - 1].component;
 
 	const form = useForm<TCreateCVRequest>({
 		resolver: zodResolver(CreateCVSchema),
 		defaultValues: {
-			jobName: "",
-			description: "",
+			jobName: cv?.jobName || "",
+			description: cv?.description || "",
 			data: {
-				firstName: "",
-				lastName: "",
-				email: "",
-				phoneNumber: "",
-				location: "",
-				website: "",
-				linkedinProfile: "",
-				summary: "",
-				jobExperiences: [],
-				educations: [],
-				skills: [],
+				firstName: cv?.data.firstName || "",
+				lastName: cv?.data.lastName || "",
+				email: cv?.data.email || "",
+				phoneNumber: cv?.data.phoneNumber || "",
+				location: cv?.data.location || "",
+				website: cv?.data.website || "",
+				linkedinProfile: cv?.data.linkedinProfile || "",
+				summary: cv?.data.summary || "",
+				jobExperiences: cv?.data.jobExperiences || [],
+				educations: cv?.data.educations || [],
+				skills: cv?.data.skills || [],
 			},
 		},
 	});
 
 	const { mutate: createCV, isPending: isCreatingCV } = useCreateCVMutation();
+	const { mutate: updateCV, isPending: isUpdatingCV } = useUpdateCVMutation(
+		cv?.id || "",
+	);
 	const router = useRouter();
 
 	const onSubmitHandler = form.handleSubmit((data) => {
+		if (cv) {
+			const req = {
+				id: cv.id,
+				...data,
+			};
+			updateCV(req, {
+				onSuccess(res) {
+					if (!res.success) {
+						toast.error(res.message);
+						return;
+					}
+
+					toast.success(res.message);
+					form.reset();
+
+					router.push("/dashboard");
+				},
+			});
+			return;
+		}
+
 		createCV(data, {
 			onSuccess(res) {
 				if (!res.success) {
@@ -57,7 +91,6 @@ export default function CVEditorContainer() {
 				router.push("/dashboard");
 			},
 		});
-		console.log("Form Data:", data);
 	});
 
 	return (
@@ -101,8 +134,14 @@ export default function CVEditorContainer() {
 									<ArrowRightIcon />
 								</Button>
 							) : (
-								<Button type="submit" disabled={isCreatingCV}>
-									{isCreatingCV ? "Creating CV..." : "Create CV"}
+								<Button type="submit" disabled={isCreatingCV || isUpdatingCV}>
+									{cv
+										? isUpdatingCV
+											? "Updating CV..."
+											: "Update CV"
+										: isCreatingCV
+											? "Creating CV..."
+											: "Create CV"}
 								</Button>
 							)}
 						</div>

@@ -6,10 +6,24 @@ import {
 } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { Separator } from "@/shared/components/ui/separator";
+import { getMyCVById } from "@/shared/repositories/cvs/action";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-export default function Page() {
+export default async function Page({
+	params,
+}: { params: Promise<{ id: string }> }) {
+	const { id } = await params;
+
+	const res = await getMyCVById(id);
+
+	if (!res.success) {
+		notFound();
+	}
+
+	const cv = res.data;
+
 	return (
 		<section className="min-h-dvh flex flex-col">
 			<Header />
@@ -21,7 +35,7 @@ export default function Page() {
 						saved automatically.
 					</p>
 				</div>
-				<CVEditorContainer />
+				<CVEditorContainer cv={cv} />
 			</div>
 		</section>
 	);
