@@ -28,7 +28,7 @@ export default function CVEditorStepper({
 								<div
 									className={cn(
 										buttonVariants({ variant: "default" }),
-										"text-foreground bg-background hover:bg-background/80 focus:bg-bakgbg-background/80",
+										"text-foreground bg-background hover:bg-background/80 focus:bg-background/80",
 										"group-data-[state=completed]/step:text-green-700 group-data-[state=completed]/step:bg-green-100 group-data-[state=completed]/step:hover:bg-green-200 group-data-[state=completed]/step:focus:bg-green-200",
 										"group-data-[state=active]/step:text-primary-foreground group-data-[state=active]/step:bg-primary group-data-[state=active]/step:hover:bg-primary/90 group-data-[state=active]/step:focus:bg-primary/90",
 									)}
