@@ -1,4 +1,3 @@
-import { useGenerateSummariesMutation } from "@/../shared/repositories/cvs/query";
 import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
@@ -17,6 +16,7 @@ import {
 } from "@/shared/components/ui/form";
 import { Textarea } from "@/shared/components/ui/textarea";
 import type { TCreateCVRequest } from "@/shared/repositories/cvs/dto";
+import { useGenerateSummariesMutation } from "@/shared/repositories/cvs/query";
 import { RefreshCwIcon, SparklesIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useFormContext } from "react-hook-form";
