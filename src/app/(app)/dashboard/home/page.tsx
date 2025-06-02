@@ -26,6 +26,7 @@ import {
 	PlusIcon,
 	SearchIcon,
 } from "lucide-react";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 export default function Page() {
@@ -212,9 +213,11 @@ function ListCVs() {
 						</SelectContent>
 					</Select>
 				</div>
-				<Button>
-					<PlusIcon />
-					<span className="hidden sm:inline">Create New CV</span>
+				<Button asChild>
+					<Link href="/dashboard/cv-builder">
+						<PlusIcon />
+						<span className="hidden sm:inline">Create New CV</span>
+					</Link>
 				</Button>
 			</div>
 

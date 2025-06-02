@@ -163,6 +163,19 @@ export default function EducationForm() {
 													placeholder="3.5"
 													inputMode="decimal"
 													{...field}
+													onChange={(e) => {
+														const value = Number.parseFloat(e.target.value);
+
+														if (
+															!Number.isNaN(value) &&
+															value >= 0 &&
+															value <= 4
+														) {
+															field.onChange(value);
+														} else {
+															field.onChange("");
+														}
+													}}
 												/>
 											</FormControl>
 											<FormMessage />

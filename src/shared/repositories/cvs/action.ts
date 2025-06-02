@@ -349,6 +349,7 @@ export const createCV = async (
 		}),
 	);
 	if (insertError) {
+		console.error(insertError);
 		return {
 			success: false,
 			error: "Database Error",

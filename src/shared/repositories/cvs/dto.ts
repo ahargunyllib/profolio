@@ -17,8 +17,8 @@ export const CreateCVSchema = z.object({
 		email: z.string().email("Invalid email address"),
 		phoneNumber: z.string().optional(),
 		location: z.string().optional(),
-		website: z.string().url("Invalid URL").optional(),
-		linkedinProfile: z.string().url("Invalid URL").optional(),
+		website: z.string().optional(),
+		linkedinProfile: z.string().optional(),
 		summary: z.string().min(1, "Summary is required"),
 
 		jobExperiences: z.array(
