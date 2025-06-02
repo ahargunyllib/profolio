@@ -1,44 +1,19 @@
-"use client";
-
-import ChangePassword from "@/features/dashboard/dashboard-setting/components/change-password";
-import DeleteAccount from "@/features/dashboard/dashboard-setting/components/delete-account";
-import type { PasswordData } from "@/features/dashboard/dashboard-setting/data/password-data";
-
+import ChangePasswordForm from "@/features/dashboard/dashboard-setting/components/change-password-form";
+import DeleteAccountForm from "@/features/dashboard/dashboard-setting/components/delete-account-form";
+import HeaderContainer from "@/features/dashboard/dashboard-setting/components/header-container";
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
 } from "@/shared/components/ui/card";
-import { ArrowLeft, Shield } from "lucide-react";
-import Link from "next/link";
+import { Separator } from "@/shared/components/ui/separator";
+import { Shield } from "lucide-react";
 
 export default function AccountPage() {
-	const handlePasswordChange = (data: PasswordData) => {
-		console.log("Password change:", data);
-	};
-
-	const handleAccountDeletion = () => {
-		console.log("Account deletion requested");
-	};
-
 	return (
-		<div className="min-h-screen bg-gray-50">
-			<header className="bg-white border-b border-gray-200">
-				<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="flex items-center justify-between py-6">
-						<div className="flex items-center space-x-4">
-							<Link
-								href="/dashboard"
-								className="flex items-center space-x-2 text-gray-600 hover:text-blue-600"
-							>
-								<ArrowLeft className="w-5 h-5" />
-								<span>Back to Dashboard</span>
-							</Link>
-						</div>
-					</div>
-				</div>
-			</header>
+		<div className="min-h-dvh bg-muted">
+			<HeaderContainer />
 
 			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				<div className="mb-8">
@@ -58,13 +33,14 @@ export default function AccountPage() {
 								<span>Security</span>
 							</CardTitle>
 						</CardHeader>
+						<Separator />
 						<CardContent className="space-y-6">
-							<ChangePassword onPasswordChange={handlePasswordChange} />
+							<ChangePasswordForm />
 						</CardContent>
 					</Card>
 					<Card>
 						<CardContent className="space-y-6">
-							<DeleteAccount onDelete={handleAccountDeletion} />
+							<DeleteAccountForm />
 						</CardContent>
 					</Card>
 				</div>

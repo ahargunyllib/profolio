@@ -5,8 +5,19 @@ import { getCookie, setCookie } from "cookies-next/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createSession } from "../session-manager/action";
-import { getMySession, login, logout, register } from "./action";
-import type { TLoginRequest, TRegisterRequest } from "./dto";
+import {
+	deleteMyAccount,
+	getMySession,
+	login,
+	logout,
+	register,
+	updatePassword,
+} from "./action";
+import type {
+	TLoginRequest,
+	TRegisterRequest,
+	TUpdatePasswordRequest,
+} from "./dto";
 
 export const useLoginMutation = () => {
 	const queryClient = useQueryClient();
@@ -60,5 +71,29 @@ export const useGetMySessionQuery = () => {
 	return useQuery({
 		queryKey: ["auth"],
 		queryFn: getMySession,
+	});
+};
+
+export const useUpdatePasswordMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationKey: ["auth", "update-password"],
+		mutationFn: (data: TUpdatePasswordRequest) => updatePassword(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["auth"] });
+		},
+	});
+};
+
+export const useDeleteMyAccountMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationKey: ["auth", "delete-account"],
+		mutationFn: () => deleteMyAccount(),
+		onSuccess: () => {
+			queryClient.resetQueries({ queryKey: ["auth"] });
+		},
 	});
 };

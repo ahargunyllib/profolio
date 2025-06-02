@@ -19,3 +19,15 @@ export const RegisterSchema = z.object({
 });
 
 export type TRegisterRequest = z.infer<typeof RegisterSchema>;
+
+export const UpdatePasswordSchema = z
+	.object({
+		currentPassword: z.string().min(6),
+		newPassword: z.string().min(6),
+		confirmNewPassword: z.string().min(6),
+	})
+	.refine((data) => data.newPassword === data.confirmNewPassword, {
+		message: "New password and confirmation do not match",
+	});
+
+export type TUpdatePasswordRequest = z.infer<typeof UpdatePasswordSchema>;
