@@ -1,3 +1,4 @@
+import { useGenerateSummariesMutation } from "@/../shared/repositories/cvs/query";
 import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
@@ -20,7 +21,6 @@ import { RefreshCwIcon, SparklesIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { useGenerateSummariesMutation } from "../../../../shared/repositories/cvs/query";
 
 export default function SummaryForm() {
 	const form = useFormContext<TCreateCVRequest>();

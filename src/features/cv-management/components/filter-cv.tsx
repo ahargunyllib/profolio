@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import {
 	Select,
@@ -11,7 +12,6 @@ import {
 } from "@/shared/components/ui/select";
 import { CVStatusArray } from "@/shared/lib/enums";
 import { FilterIcon, SearchIcon, Trash2Icon } from "lucide-react";
-import { Button } from "../../../shared/components/ui/button";
 import { useFilterCVs } from "../hooks/use-filter-cvs";
 
 export default function FilterCV() {
