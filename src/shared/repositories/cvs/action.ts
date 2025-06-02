@@ -3,7 +3,7 @@
 import { generateObjectFromAI, models } from "@/server/ai";
 import { db } from "@/server/db";
 import { cvsTable } from "@/server/db/schema/cv";
-import { and, eq, ilike, or } from "drizzle-orm";
+import { and, avg, count, eq, ilike, or, sql } from "drizzle-orm";
 import z from "zod";
 import { tryCatch } from "../../lib/try-catch";
 import type { ApiResponse, CV } from "../../types";
@@ -469,5 +469,72 @@ export const deleteCV = async (id: CV["id"]): Promise<ApiResponse<null>> => {
 		success: true,
 		message: "CV deleted successfully",
 		data: null,
+	};
+};
+
+export const getMyCVStatistic = async (): Promise<
+	ApiResponse<{
+		total: number;
+		completed: number;
+		inProgress: number;
+		draft: number;
+		avgATSScore: string | null;
+	}>
+> => {
+	const { data: session, error: getSessionError } = await tryCatch(
+		getSession(),
+	);
+	if (getSessionError) {
+		return {
+			success: false,
+			error: "Session Error",
+			message: "An error occurred while retrieving the session",
+		};
+	}
+
+	if (!session || !session.isLoggedIn) {
+		return {
+			success: false,
+			error: "Unauthorized",
+			message: "You must be logged in to view your CV statistics",
+		};
+	}
+
+	const { data: stats, error: fetchError } = await tryCatch(
+		db
+			.select({
+				total: count().as("total"),
+				completed:
+					sql<number>`COUNT(*) FILTER (WHERE ${eq(cvsTable.status, 3)})`.as(
+						"completed",
+					),
+				inProgress:
+					sql<number>`COUNT(*) FILTER (WHERE ${eq(cvsTable.status, 2)})`.as(
+						"inProgress",
+					),
+				draft:
+					sql<number>`COUNT(*) FILTER (WHERE ${eq(cvsTable.status, 1)})`.as(
+						"draft",
+					),
+				avgATSScore: avg(cvsTable.atsScore).as("avgATSScore"),
+			})
+			.from(cvsTable)
+			.where(eq(cvsTable.userId, session.userId)),
+	);
+	if (fetchError) {
+		return {
+			success: false,
+			error: "Database Error",
+			message:
+				"An error occurred while fetching your CV statistics from the database",
+		};
+	}
+
+	console.log(stats);
+
+	return {
+		success: true,
+		message: "CV statistics retrieved successfully",
+		data: stats[0],
 	};
 };

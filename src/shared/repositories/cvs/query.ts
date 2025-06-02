@@ -10,6 +10,7 @@ import {
 	generatePoints,
 	generateSummaries,
 	getMyCVById,
+	getMyCVStatistic,
 	getMyCVs,
 	updateCV,
 } from "./action";
@@ -94,5 +95,12 @@ export const useDeleteCVMutation = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["cvs"] });
 		},
+	});
+};
+
+export const useGetMyCVStatisticQuery = () => {
+	return useQuery({
+		queryKey: ["cvs", "statistic"],
+		queryFn: () => getMyCVStatistic(),
 	});
 };
