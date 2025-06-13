@@ -2,7 +2,7 @@ import { RegisterForm } from "@/features/auth/components/register-form";
 import Image from "next/image";
 export default function Page() {
 	return (
-		<section className="p-20 h-screen flex flex-row gap-36">
+		<section className="p-8 lg:p-20 h-screen flex flex-row gap-36">
 			<div className="w-full flex flex-col gap-6">
 				<div className="flex flex-row gap-5 items-center ">
 					<Image
@@ -10,6 +10,7 @@ export default function Page() {
 						alt="profolio"
 						width={72}
 						height={72}
+						className="w-13 h-13 lg:w-18 lg:h-18"
 					/>
 					<h1 className="font-semibold text-2xl">Profolio</h1>
 				</div>
