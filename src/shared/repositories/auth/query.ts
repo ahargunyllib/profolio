@@ -11,6 +11,7 @@ import {
 	login,
 	logout,
 	register,
+	updateMyProfile,
 	updateMyProfilePicture,
 	updatePassword,
 } from "./action";
@@ -19,6 +20,7 @@ import type {
 	TRegisterRequest,
 	TUpdatePasswordRequest,
 	TUpdateProfilePictureRequest,
+	TUpdateProfileRequest,
 } from "./dto";
 
 export const useLoginMutation = () => {
@@ -106,6 +108,18 @@ export const useUpdateProfilePictureMutation = () => {
 		mutationKey: ["auth", "update-profile-picture"],
 		mutationFn: (data: TUpdateProfilePictureRequest) =>
 			updateMyProfilePicture(data),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["auth"] });
+		},
+	});
+};
+
+export const useUpdateMyProfileMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationKey: ["auth", "update-profile"],
+		mutationFn: (data: TUpdateProfileRequest) => updateMyProfile(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["auth"] });
 		},

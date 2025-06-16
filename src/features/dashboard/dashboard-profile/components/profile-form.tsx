@@ -15,10 +15,12 @@ import {
 	type TUpdateProfileRequest,
 	UpdateProfileSchema,
 } from "@/shared/repositories/auth/dto";
+import { useUpdateMyProfileMutation } from "@/shared/repositories/auth/query";
 import type { User } from "@/shared/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SaveIcon, XIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type Props = {
 	onCancel: () => void;
@@ -26,6 +28,7 @@ type Props = {
 };
 
 export default function ProfileForm({ onCancel, user }: Props) {
+	const { mutate: updateMyProfile, isPending } = useUpdateMyProfileMutation();
 	const form = useForm<TUpdateProfileRequest>({
 		resolver: zodResolver(UpdateProfileSchema),
 		defaultValues: {
@@ -42,7 +45,18 @@ export default function ProfileForm({ onCancel, user }: Props) {
 	});
 
 	const onSubmitHandler = form.handleSubmit((data) => {
-		// Handle form submission logic here
+		updateMyProfile(data, {
+			onSuccess: (res) => {
+				if (!res.success) {
+					toast.error(res.message);
+					return;
+				}
+
+				toast.success(res.message);
+
+				onCancel();
+			},
+		});
 	});
 
 	return (
