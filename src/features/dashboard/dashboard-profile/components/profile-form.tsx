@@ -71,6 +71,7 @@ export default function ProfileForm({ onCancel, user }: Props) {
 						<Button
 							type="submit"
 							className="px-4 py-2 rounded text-sm flex items-center"
+							disabled={isPending}
 						>
 							<SaveIcon />
 							Save
